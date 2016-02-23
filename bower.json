@@ -1,0 +1,32 @@
+{
+  "name": "svalbard",
+  "description": "threejs scenegraph",
+  "main": "public/bundle.min.js",
+  "authors": [
+    "Øystein Ivar Malt <oysmal@gmail.com>"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "threejs",
+    "svalbard",
+    "angular"
+  ],
+  "moduleType": [
+    "amd"
+  ],
+  "homepage": "",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "^1.5.0",
+    "bootstrap": "^3.3.6",
+    "angular-route": "^1.5.0",
+    "three.js": "^0.74.0"
+  }
+}
