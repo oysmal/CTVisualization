@@ -2,9 +2,9 @@
 
 /* App Module */
 
-var phonecatApp = angular.module('svalbardApp', [
+var ctApp = angular.module('ctApp', [
   'ngRoute',
-  'svalbardMain',
+  'ctMain',
 ]);
 
 phonecatApp.config(['$routeProvider',

@@ -1,7 +1,7 @@
 
 'use strict';
 
-var main = angular.module('svalbardMain', []);
+var main = angular.module('ctMain', []);
 
 main.controller('MainController', ['$scope', function($scope) {
   $(document).trigger('readyForCanvas');
