@@ -7,7 +7,7 @@ var ctApp = angular.module('ctApp', [
   'ctMain',
 ]);
 
-phonecatApp.config(['$routeProvider',
+ctApp.config(['$routeProvider',
   function($routeProvider) {
     $routeProvider.
       when('/', {
