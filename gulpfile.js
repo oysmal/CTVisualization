@@ -20,12 +20,14 @@ var OPTS = {
     stylesheets : 'app/styles/*.{scss,css,sass}',
     javascripts : 'app/**/*.js',
     images : 'app/resources/**/*.{png,gif,jpeg,jpg}',
+    shaders : 'app/threejs/shaders/**/*.{vs,fs}',
     root : 'app'
   },
   dest: {
     html : 'public',
     stylesheets : 'public/assets/stylesheets',
     images : 'public/assets/images',
+    shaders : 'public/assets/shaders',
     bundleName : 'bundle.min.js',
     bower : 'public/lib',
     root : 'public'
@@ -37,7 +39,7 @@ gulp.task('default', ['watch'] , function() {
   return gutil.log('Gulp is running!')
 });
 
-gulp.task('build', ['copyHtml', 'copyImages', 'buildStylesheets', 'buildJS', 'bower-files']);
+gulp.task('build', ['copyHtml', 'copyImages', 'copyShaders', 'buildStylesheets', 'buildJS', 'bower-files']);
 
 // configure the jshint task
 gulp.task('jshint', function() {
@@ -57,15 +59,19 @@ gulp.task('watch', function() {
 //######################################################################
 
 gulp.task('copyHtml', function() {
-  gulp.src(OPTS.src.html).pipe(gulp.dest(OPTS.dest.html));
+  return gulp.src(OPTS.src.html).pipe(gulp.dest(OPTS.dest.html));
 });
 
 gulp.task('copyImages', function() {
-  gulp.src(OPTS.src.images).pipe(gulp.dest(OPTS.dest.images));
+  return gulp.src(OPTS.src.images).pipe(gulp.dest(OPTS.dest.images));
+});
+
+gulp.task('copyShaders', function() {
+  return gulp.src(OPTS.src.shaders).pipe(gulp.dest(OPTS.dest.shaders));
 });
 
 gulp.task('buildStylesheets', function() {
-  gulp.src(OPTS.src.stylesheets)
+  return gulp.src(OPTS.src.stylesheets)
   .pipe(sourcemaps.init())  // Process the original sources
   .pipe(sass())
   .pipe(sourcemaps.write())  // Process the original sources
@@ -84,7 +90,7 @@ gulp.task('buildJS', function() {
 });
 
 gulp.task("bower-files", function(){
-    gulp.src(mainBowerFiles())
+    return gulp.src(mainBowerFiles())
     .pipe(gulp.dest(OPTS.dest.bower));
 });
 

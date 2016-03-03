@@ -4,7 +4,7 @@
 var main = angular.module('ctMain', []);
 
 main.controller('MainController', ['$scope', function($scope) {
-  $(document).trigger('readyForCanvas');
+  $(document).trigger('readyForCanvasRaycaster');
 
   $scope.updateRotation = function() {
     console.log("onClickRotationChanged");
