@@ -74,10 +74,31 @@ function init() {
   sceneFirstPass = new THREE.Scene();
 	sceneSecondPass = new THREE.Scene();
 
-  cubeTexture = THREE.ImageUtils.loadTexture('/assets/images/bonsai.raw.png' );
+  var randomdata = [];
+  for( var i = 0; i < 64; i++) {
+    randomdata[i] = [];
+    for( var j = 0; j < 64; j++) {
+      randomdata[i][j] = [];
+      for( var k = 0; k < 64; k++) {
+        randomdata[i][j].push(Math.floor(Math.random()*4095));
+        if(Math.random()*1 >= 1/64.0*i*1.1) {
+          randomdata[i][j][k] = 0.0;
+        }
+      }
+    }
+    console.log("random data progress: " + i/64 + " %");
+  }
+
+  var image = mosaic.createMosaicImage(64,64,randomdata);//THREE.ImageUtils.loadTexture('/assets/images/bonsai.raw.png' );
+  console.log(image);
+  cubeTexture = new THREE.Texture(image);
+  console.log(cubeTexture);
+  //cubeTexture = THREE.ImageUtils.loadTexture('/assets/images/bonsai.raw.png');
   cubeTexture.generateMipmaps = false;
   cubeTexture.minFilter = THREE.LinearFilter;
   cubeTexture.magFilter = THREE.LinearFilter;
+
+  //$("#test").append(image);
 
   transferTexture = updateTransferFunction();
 
@@ -118,7 +139,7 @@ function init() {
       },
 			steps : {
         type: "1f" ,
-        value: 256
+        value: 64
       },
 			alphaCorrection : {
         type: "1f" ,
@@ -214,7 +235,7 @@ function updateTransferFunction() {
   var img = document.getElementById("transferTexture");
 				img.src = canvas.toDataURL();
 				img.style.width = "256 px";
-				img.style.height = "128 px";
+				img.style.height = "20 px";
 
 	transferTexture =  new THREE.Texture(canvas);
 	transferTexture.wrapS = transferTexture.wrapT =  THREE.ClampToEdgeWrapping;
