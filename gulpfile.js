@@ -73,7 +73,7 @@ gulp.task('copyShaders', function() {
 gulp.task('buildStylesheets', function() {
   return gulp.src(OPTS.src.stylesheets)
   .pipe(sourcemaps.init())  // Process the original sources
-  .pipe(sass())
+//  .pipe(sass())
   .pipe(sourcemaps.write())  // Process the original sources
   .pipe(gulp.dest(OPTS.dest.stylesheets));
 });
@@ -96,7 +96,7 @@ gulp.task("bower-files", function(){
 
 gulp.task('clean:public', function () {
   return del([
-    'public/*'
+    'public/[^.]*'
   ]);
 });
 

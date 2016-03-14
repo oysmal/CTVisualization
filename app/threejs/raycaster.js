@@ -32,7 +32,6 @@ function loadResource(url, callback) {
 
 // Load shaders
 function loadShaders() {
-  console.log("HELLO");
   loadResource('/assets/shaders/raycaster.firstpass.vs', function(err, data) {
     if(err) {
       console.log(err);
@@ -74,92 +73,114 @@ function init() {
   sceneFirstPass = new THREE.Scene();
 	sceneSecondPass = new THREE.Scene();
 
-  cubeTexture = THREE.ImageUtils.loadTexture('/assets/images/bonsai.raw.png' );
-  cubeTexture.generateMipmaps = false;
-  cubeTexture.minFilter = THREE.LinearFilter;
-  cubeTexture.magFilter = THREE.LinearFilter;
-
-  transferTexture = updateTransferFunction();
-
-  rtTexture = new THREE.WebGLRenderTarget( screenSize.x, screenSize.y,
-														{ 	minFilter: THREE.LinearFilter,
-															magFilter: THREE.LinearFilter,
-															wrapS:  THREE.ClampToEdgeWrapping,
-															wrapT:  THREE.ClampToEdgeWrapping,
-															format: THREE.RGBFormat,
-															type: THREE.FloatType,
-															generateMipmaps: false} );
-
-
-  materialFirstPass = new THREE.ShaderMaterial( {
-  	vertexShader: vertexShader1,
-  	fragmentShader: fragmentShader1,
-  	side: THREE.BackSide
-  } );
-
-	materialSecondPass = new THREE.ShaderMaterial( {
-  	vertexShader: vertexShader2,
-  	fragmentShader: fragmentShader2,
-		side: THREE.FrontSide,
-		uniforms: {
-      tex:  {
-        type: "t",
-        value: rtTexture
-      },
-			cubeTex:
-      {
-        type: "t",
-        value: cubeTexture
-      },
-			transferTex:
-      {
-        type: "t",
-        value: transferTexture
-      },
-			steps : {
-        type: "1f" ,
-        value: 256
-      },
-			alphaCorrection : {
-        type: "1f" ,
-        value: 1.0
+  var randomdata = [];
+  for( var i = 0; i < 64; i++) {
+    randomdata[i] = [];
+    for( var j = 0; j < 64; j++) {
+      randomdata[i][j] = [];
+      for( var k = 0; k < 64; k++) {
+        randomdata[i][j].push(Math.min(Math.floor(Math.random()*4095*55.5), 4095));
+        if(Math.random()*1 >= 1/64.0*k*1.5) {
+          randomdata[i][j][k] = 0.0;
+        }
       }
     }
-	 });
+    console.log("random data progress: " + i/64 + " %");
+  }
+
+  mosaic.createMosaicImage(64,64,randomdata, function(canvas) {//THREE.ImageUtils.loadTexture('/assets/images/bonsai.raw.png' );
+    cubeTexture = new THREE.Texture(canvas);
+    cubeTexture.needsUpdate = true;
+    console.log(cubeTexture);
+    //cubeTexture = THREE.ImageUtils.loadTexture('/assets/images/bonsai.raw.png');
+    cubeTexture.generateMipmaps = false;
+    cubeTexture.minFilter = THREE.LinearFilter;
+    cubeTexture.magFilter = THREE.LinearFilter;
+
+    container.append(canvas);
+
+    transferTexture = updateTransferFunction();
+
+    rtTexture = new THREE.WebGLRenderTarget( screenSize.x, screenSize.y,
+  														{ 	minFilter: THREE.LinearFilter,
+  															magFilter: THREE.LinearFilter,
+  															wrapS:  THREE.ClampToEdgeWrapping,
+  															wrapT:  THREE.ClampToEdgeWrapping,
+  															format: THREE.RGBFormat,
+  															type: THREE.FloatType,
+  															generateMipmaps: false} );
 
 
-  // Geometry setup
-	var boxGeometry = new THREE.BoxGeometry(1.0, 1.0, 1.0);
-	boxGeometry.doubleSided = true;
-	var meshFirstPass = new THREE.Mesh( boxGeometry, materialFirstPass );
-	var meshSecondPass = new THREE.Mesh( boxGeometry, materialSecondPass );
-	sceneFirstPass.add( meshFirstPass );
-	sceneSecondPass.add( meshSecondPass );
+    materialFirstPass = new THREE.ShaderMaterial( {
+    	vertexShader: vertexShader1,
+    	fragmentShader: fragmentShader1,
+    	side: THREE.BackSide
+    } );
+
+  	materialSecondPass = new THREE.ShaderMaterial( {
+    	vertexShader: vertexShader2,
+    	fragmentShader: fragmentShader2,
+  		side: THREE.FrontSide,
+  		uniforms: {
+        tex:  {
+          type: "t",
+          value: rtTexture
+        },
+  			cubeTex:
+        {
+          type: "t",
+          value: cubeTexture
+        },
+  			transferTex:
+        {
+          type: "t",
+          value: transferTexture
+        },
+  			steps : {
+          type: "1f" ,
+          value: 64
+        },
+  			alphaCorrection : {
+          type: "1f" ,
+          value: 1.0
+        }
+      }
+  	 });
 
 
-  renderer = new THREE.WebGLRenderer();
-  renderer.setPixelRatio( window.devicePixelRatio );
-  renderer.setSize( screenSize.x, screenSize.y );
-  renderer.autoClear = true;
-  renderer.setClearColor("#FFFFFF");
-  console.log("clear color: ");
-  console.log(renderer.getClearColor());
-  renderer.domElement.setAttribute('id', 'canvas');
-  container.append( renderer.domElement );
+    // Geometry setup
+  	var boxGeometry = new THREE.BoxGeometry(1.0, 1.0, 1.0);
+  	boxGeometry.doubleSided = true;
+  	var meshFirstPass = new THREE.Mesh( boxGeometry, materialFirstPass );
+  	var meshSecondPass = new THREE.Mesh( boxGeometry, materialSecondPass );
+  	sceneFirstPass.add( meshFirstPass );
+  	sceneSecondPass.add( meshSecondPass );
 
-  var b = new THREE.BoxGeometry(2,2,2);
-  var bmat = new THREE.MeshBasicMaterial({color: "#FF0000"});
 
-  var bmesh = new THREE.Mesh(b, bmat);
-  bmesh.position.x = 0;
-  bmesh.position.y = 0;
-  bmesh.position.z = 0;
+    renderer = new THREE.WebGLRenderer();
+    renderer.setPixelRatio( window.devicePixelRatio );
+    renderer.setSize( screenSize.x, screenSize.y );
+    renderer.autoClear = true;
+    renderer.setClearColor("#FFFFFF");
+    console.log("clear color: ");
+    console.log(renderer.getClearColor());
+    renderer.domElement.setAttribute('id', 'canvas');
+    container.append( renderer.domElement );
 
-  //sceneSecondPass.add(bmesh);
+    var b = new THREE.BoxGeometry(2,2,2);
+    var bmat = new THREE.MeshBasicMaterial({color: "#FF0000"});
 
-  window.addEventListener( 'resize', onWindowResize, false );
+    var bmesh = new THREE.Mesh(b, bmat);
+    bmesh.position.x = 0;
+    bmesh.position.y = 0;
+    bmesh.position.z = 0;
 
-  animate();
+    //sceneSecondPass.add(bmesh);
+
+    window.addEventListener( 'resize', onWindowResize, false );
+
+    animate();
+  });
 }
 
 function onWindowResize() {
@@ -214,7 +235,7 @@ function updateTransferFunction() {
   var img = document.getElementById("transferTexture");
 				img.src = canvas.toDataURL();
 				img.style.width = "256 px";
-				img.style.height = "128 px";
+				img.style.height = "20 px";
 
 	transferTexture =  new THREE.Texture(canvas);
 	transferTexture.wrapS = transferTexture.wrapT =  THREE.ClampToEdgeWrapping;
