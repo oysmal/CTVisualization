@@ -227,6 +227,15 @@ $(document).on('readyForCanvasRaycaster', function(event) {
   console.log("readyForCanvasRaycaster");
   loadShaders();
   $("#canvas").on( 'mousemove', onDocumentMouseMove );
+
+  console.log("HALVEIS");
+  $('#tf-holder').tfWidget(function (controlPoints, tfArray) {
+    
+
+    console.log("TRANSFERFUNCTION");
+  });
+    
+
 });
 
 $(document).on('rotationValueChanged', function(event, x, y) {

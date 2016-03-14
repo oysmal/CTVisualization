@@ -1,0 +1,105 @@
+/**
+ * Transfer Function Widget
+ * © 2015 Qingya Shu 
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ */
+#tf-container {
+  height: 184px;
+  width: 500px;
+  border: 1px solid grey;
+  background-color: white;
+}
+
+#tf-widget {
+  position: relative;
+  left: 0;
+  top: 0;
+}
+
+.tf-button {
+  width: 65px;
+  font-size: 14px;
+}
+
+#tf-picker-and-buttons {
+  position: relative;
+  left: 360px;
+  top: -184px;
+}
+
+.control-point {
+  cursor: pointer;
+  stroke-width: 0;
+  stroke: black;
+}
+
+.control-point.highlighted {
+  stroke-width: 2px;
+}
+
+/**
+ * Farbtastic Color Picker 1.2
+ * © 2008 Steven Wittens
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ */
+.farbtastic {
+  position: relative;
+}
+.farbtastic * {
+  position: absolute;
+  cursor: crosshair;
+}
+.farbtastic, .farbtastic .wheel {
+  width: 130px; /*195*/
+  height: 130px; /*195*/
+}
+.farbtastic .color, .farbtastic .overlay {
+  top: 32px; /*47*/
+  left: 32px; /*47*/
+  width: 66px; /*101*/
+  height: 66px; /*101*/
+}
+.farbtastic .wheel {
+  background: url(../images/transferfunction/wheel.png) no-repeat;
+  width: 130px;
+  height: 130px;
+  background-size: 100%;
+}
+.farbtastic .overlay {
+  background: url(../images/transferfunction/mask.png) no-repeat;
+  background-size: 100%;
+}
+.farbtastic .marker {
+  width: 17px;
+  height: 17px;
+  /*margin: -8px 0 0 -8px;*/
+  margin: -6px 0 0 -6px;
+  overflow: hidden; 
+  background: url(../images/transferfunction/marker.png) no-repeat;
+}
