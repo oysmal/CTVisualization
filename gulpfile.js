@@ -96,7 +96,7 @@ gulp.task("bower-files", function(){
 
 gulp.task('clean:public', function () {
   return del([
-    'public/*'
+    'public/[^.]*'
   ]);
 });
 
