@@ -43,14 +43,13 @@ vec4 sampleAs3DTexture( vec3 texCoord ) {
   colorSlice1 = texture2D( cubeTex, texCoordSlice1 );
   colorSlice2 = texture2D( cubeTex, texCoordSlice2 );
 
+  float val1 = colorSlice1.r*256.0;
+  val1 = (val1*255.0 + colorSlice1.g*255.0)/4095.0;
+  colorSlice1.a = val1;
 
-  //float val1 = colorSlice1.r*256.0;
-  //val1 = min((val1*256.0*256.0 + colorSlice1.g*256.0)/4096.0, 1.0);
-  //colorSlice1.a = val1;
-
-  //float val2 = colorSlice2.r*256.0;
-  //val2 = min((val2*256.0*256.0 + colorSlice2.g*256.0)/4096.0, 1.0);
-  //colorSlice2.a = val2;
+  float val2 = colorSlice2.r*256.0;
+  val2 = (val1*255.0 + colorSlice1.g*255.0)/4095.0;
+  colorSlice2.a = val2;
 
   //Based on the opacity obtained earlier, get the RGB color in the transfer function texture.
   colorSlice1.rgb = texture2D( transferTex, vec2( colorSlice1.a, 1.0) ).rgb;

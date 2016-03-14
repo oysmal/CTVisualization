@@ -16,8 +16,9 @@ mosaic.createOneImage = function(sizex, sizey, data) {
 			id.data[0] = msb;	// r
 			id.data[1] = lsb;	// g
 			id.data[2] = 0;	// b
-			id.data[3] = Math.floor(data[i][j]/4095*255);	// a
+			id.data[3] = 255;//Math.floor(data[i][j]/4095*255);	// a
 			ctx.putImageData(id, j, i); // row based, so add to x=j, y=i
+			//console.log("calc: " + (id.data[0]*255.0*256.0 + id.data[1]*255.0)/4096.0/255.0);
 		}
 	}
 
@@ -26,7 +27,7 @@ mosaic.createOneImage = function(sizex, sizey, data) {
 	return image;
 }
 
-mosaic.createMosaicImage = function(sizex, sizey, data) {
+mosaic.createMosaicImage = function(sizex, sizey, data, callback) {
 	var canvas = document.createElement("canvas");
 	canvas.setAttribute("width", sizex*8);
 	canvas.setAttribute("height", sizey*8);
@@ -39,7 +40,7 @@ mosaic.createMosaicImage = function(sizex, sizey, data) {
 			console.log("image generation progress: " + Math.floor((i*j+j)/data.length*100) + " %");
 		}
 	}
-	var img = new Image();
-	img.src = canvas.toDataURL("/image/png");
-	return img;
+//	var img = new Image();
+	//img.src = canvas.toDataURL("/image/png");
+	callback(canvas);
 }

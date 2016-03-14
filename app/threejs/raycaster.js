@@ -32,7 +32,6 @@ function loadResource(url, callback) {
 
 // Load shaders
 function loadShaders() {
-  console.log("HELLO");
   loadResource('/assets/shaders/raycaster.firstpass.vs', function(err, data) {
     if(err) {
       console.log(err);
@@ -89,98 +88,99 @@ function init() {
     console.log("random data progress: " + i/64 + " %");
   }
 
-  var image = mosaic.createMosaicImage(64,64,randomdata);//THREE.ImageUtils.loadTexture('/assets/images/bonsai.raw.png' );
-  console.log(image);
-  cubeTexture = new THREE.Texture(image);
-  console.log(cubeTexture);
-  //cubeTexture = THREE.ImageUtils.loadTexture('/assets/images/bonsai.raw.png');
-  cubeTexture.generateMipmaps = false;
-  cubeTexture.minFilter = THREE.LinearFilter;
-  cubeTexture.magFilter = THREE.LinearFilter;
+  mosaic.createMosaicImage(64,64,randomdata, function(canvas) {//THREE.ImageUtils.loadTexture('/assets/images/bonsai.raw.png' );
+    cubeTexture = new THREE.Texture(canvas);
+    cubeTexture.needsUpdate = true;
+    console.log(cubeTexture);
+    //cubeTexture = THREE.ImageUtils.loadTexture('/assets/images/bonsai.raw.png');
+    cubeTexture.generateMipmaps = false;
+    cubeTexture.minFilter = THREE.LinearFilter;
+    cubeTexture.magFilter = THREE.LinearFilter;
 
-  //$("#test").append(image);
+    //$("#test").append(image);
 
-  transferTexture = updateTransferFunction();
+    transferTexture = updateTransferFunction();
 
-  rtTexture = new THREE.WebGLRenderTarget( screenSize.x, screenSize.y,
-														{ 	minFilter: THREE.LinearFilter,
-															magFilter: THREE.LinearFilter,
-															wrapS:  THREE.ClampToEdgeWrapping,
-															wrapT:  THREE.ClampToEdgeWrapping,
-															format: THREE.RGBFormat,
-															type: THREE.FloatType,
-															generateMipmaps: false} );
+    rtTexture = new THREE.WebGLRenderTarget( screenSize.x, screenSize.y,
+  														{ 	minFilter: THREE.LinearFilter,
+  															magFilter: THREE.LinearFilter,
+  															wrapS:  THREE.ClampToEdgeWrapping,
+  															wrapT:  THREE.ClampToEdgeWrapping,
+  															format: THREE.RGBFormat,
+  															type: THREE.FloatType,
+  															generateMipmaps: false} );
 
 
-  materialFirstPass = new THREE.ShaderMaterial( {
-  	vertexShader: vertexShader1,
-  	fragmentShader: fragmentShader1,
-  	side: THREE.BackSide
-  } );
+    materialFirstPass = new THREE.ShaderMaterial( {
+    	vertexShader: vertexShader1,
+    	fragmentShader: fragmentShader1,
+    	side: THREE.BackSide
+    } );
 
-	materialSecondPass = new THREE.ShaderMaterial( {
-  	vertexShader: vertexShader2,
-  	fragmentShader: fragmentShader2,
-		side: THREE.FrontSide,
-		uniforms: {
-      tex:  {
-        type: "t",
-        value: rtTexture
-      },
-			cubeTex:
-      {
-        type: "t",
-        value: cubeTexture
-      },
-			transferTex:
-      {
-        type: "t",
-        value: transferTexture
-      },
-			steps : {
-        type: "1f" ,
-        value: 64
-      },
-			alphaCorrection : {
-        type: "1f" ,
-        value: 1.0
+  	materialSecondPass = new THREE.ShaderMaterial( {
+    	vertexShader: vertexShader2,
+    	fragmentShader: fragmentShader2,
+  		side: THREE.FrontSide,
+  		uniforms: {
+        tex:  {
+          type: "t",
+          value: rtTexture
+        },
+  			cubeTex:
+        {
+          type: "t",
+          value: cubeTexture
+        },
+  			transferTex:
+        {
+          type: "t",
+          value: transferTexture
+        },
+  			steps : {
+          type: "1f" ,
+          value: 64
+        },
+  			alphaCorrection : {
+          type: "1f" ,
+          value: 1.0
+        }
       }
-    }
-	 });
+  	 });
 
 
-  // Geometry setup
-	var boxGeometry = new THREE.BoxGeometry(1.0, 1.0, 1.0);
-	boxGeometry.doubleSided = true;
-	var meshFirstPass = new THREE.Mesh( boxGeometry, materialFirstPass );
-	var meshSecondPass = new THREE.Mesh( boxGeometry, materialSecondPass );
-	sceneFirstPass.add( meshFirstPass );
-	sceneSecondPass.add( meshSecondPass );
+    // Geometry setup
+  	var boxGeometry = new THREE.BoxGeometry(1.0, 1.0, 1.0);
+  	boxGeometry.doubleSided = true;
+  	var meshFirstPass = new THREE.Mesh( boxGeometry, materialFirstPass );
+  	var meshSecondPass = new THREE.Mesh( boxGeometry, materialSecondPass );
+  	sceneFirstPass.add( meshFirstPass );
+  	sceneSecondPass.add( meshSecondPass );
 
 
-  renderer = new THREE.WebGLRenderer();
-  renderer.setPixelRatio( window.devicePixelRatio );
-  renderer.setSize( screenSize.x, screenSize.y );
-  renderer.autoClear = true;
-  renderer.setClearColor("#FFFFFF");
-  console.log("clear color: ");
-  console.log(renderer.getClearColor());
-  renderer.domElement.setAttribute('id', 'canvas');
-  container.append( renderer.domElement );
+    renderer = new THREE.WebGLRenderer();
+    renderer.setPixelRatio( window.devicePixelRatio );
+    renderer.setSize( screenSize.x, screenSize.y );
+    renderer.autoClear = true;
+    renderer.setClearColor("#FFFFFF");
+    console.log("clear color: ");
+    console.log(renderer.getClearColor());
+    renderer.domElement.setAttribute('id', 'canvas');
+    container.append( renderer.domElement );
 
-  var b = new THREE.BoxGeometry(2,2,2);
-  var bmat = new THREE.MeshBasicMaterial({color: "#FF0000"});
+    var b = new THREE.BoxGeometry(2,2,2);
+    var bmat = new THREE.MeshBasicMaterial({color: "#FF0000"});
 
-  var bmesh = new THREE.Mesh(b, bmat);
-  bmesh.position.x = 0;
-  bmesh.position.y = 0;
-  bmesh.position.z = 0;
+    var bmesh = new THREE.Mesh(b, bmat);
+    bmesh.position.x = 0;
+    bmesh.position.y = 0;
+    bmesh.position.z = 0;
 
-  //sceneSecondPass.add(bmesh);
+    //sceneSecondPass.add(bmesh);
 
-  window.addEventListener( 'resize', onWindowResize, false );
+    window.addEventListener( 'resize', onWindowResize, false );
 
-  animate();
+    animate();
+  });
 }
 
 function onWindowResize() {
