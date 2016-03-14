@@ -47,19 +47,26 @@ vec4 sampleAs3DTexture( vec3 texCoord ) {
   val1 = (val1*255.0 + colorSlice1.g*255.0)/4095.0;
   colorSlice1.a = val1;
 
+
   float val2 = colorSlice2.r*256.0;
   val2 = (val1*255.0 + colorSlice1.g*255.0)/4095.0;
   colorSlice2.a = val2;
 
+  if(colorSlice1.a < 0.7 && colorSlice2.a < 0.7) {
+    return vec4(0.0);
+  }
+
   //Based on the opacity obtained earlier, get the RGB color in the transfer function texture.
-  colorSlice1.rgb = texture2D( transferTex, vec2( colorSlice1.a, 1.0) ).rgb;
-  colorSlice2.rgb = texture2D( transferTex, vec2( colorSlice2.a, 1.0) ).rgb;
+  out1.rgb = texture2D( transferTex, vec2( colorSlice1.a, 1.0) ).rgb;
+  out2.rgb = texture2D( transferTex, vec2( colorSlice2.a, 1.0) ).rgb;
+  out1.a = colorSlice1.a;
+  out2.a = colorSlice2.a;
 
   //How distant is zSlice1 to ZSlice2. Used to interpolate between one Z slice and the other.
   float zDifference = mod(texCoord.z * 63.0, 1.0);
 
   //Finally interpolate between the two intermediate colors of each Z slice.
-  return mix(colorSlice1, colorSlice2, zDifference);
+  return mix(out1, out2, zDifference);
 }
 
 void main( void ) {
@@ -100,7 +107,7 @@ void main( void ) {
 
   //If we have twice as many samples, we only need ~1/2 the alpha per sample.
   //Scaling by 256/10 just happens to give a good value for the alphaCorrection slider.
-  float alphaScaleFactor = 6.3 * delta;
+  float alphaScaleFactor = 1.0;//6.3 * delta;
 
   vec4 colorSample;
   float alphaSample;

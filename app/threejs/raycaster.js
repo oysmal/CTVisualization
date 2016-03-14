@@ -79,8 +79,8 @@ function init() {
     for( var j = 0; j < 64; j++) {
       randomdata[i][j] = [];
       for( var k = 0; k < 64; k++) {
-        randomdata[i][j].push(Math.floor(Math.random()*4095));
-        if(Math.random()*1 >= 1/64.0*i*1.1) {
+        randomdata[i][j].push(Math.min(Math.floor(Math.random()*4095*55.5), 4095));
+        if(Math.random()*1 >= 1/64.0*k*1.5) {
           randomdata[i][j][k] = 0.0;
         }
       }
@@ -97,7 +97,7 @@ function init() {
     cubeTexture.minFilter = THREE.LinearFilter;
     cubeTexture.magFilter = THREE.LinearFilter;
 
-    //$("#test").append(image);
+    container.append(canvas);
 
     transferTexture = updateTransferFunction();
 
