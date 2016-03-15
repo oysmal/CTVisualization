@@ -125,14 +125,19 @@ function init(data) {
         },
   			steps : {
           type: "1f" ,
-          value: 257
+          value: mosaic.sizez
         },
   			alphaCorrection : {
           type: "1f" ,
           value: 0.1
+        },
+        maxSteps: {
+          type: "1i" ,
+          value: Math.ceil(Math.sqrt(3)*mosaic.sizez)
         }
       }
   	 });
+   	console.log("mosaicz real: " + mosaic.sizez);
 
 
     // Geometry setup

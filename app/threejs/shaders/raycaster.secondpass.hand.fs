@@ -5,13 +5,13 @@ varying vec4 projectedCoords;
 uniform sampler2D tex, cubeTex, transferTex;
 uniform float steps;
 uniform float alphaCorrection;
-uniform float scaleFactor;
+uniform int maxSteps;
 
 // The maximum distance through our rendering volume is sqrt(3).
 // The maximum number of steps we take to travel a distance of 1 is 512.
 // ceil( sqrt(3) * 512 ) = 887
 // This prevents the back of the image from getting cut off when steps=512 & viewing diagonally.
-const int MAX_STEPS = 446;
+const int MAX_STEPS_RAYCASTER = 1000;
 
 //Acts like a texture3D using Z slices and trilinear filtering.
 vec4 sampleAs3DTexture( vec3 texCoord ) {
@@ -21,21 +21,23 @@ vec4 sampleAs3DTexture( vec3 texCoord ) {
 
   //The z coordinate determines which Z slice we have to look for.
   //Z slice number goes from 0 to 255.
-  float zSliceNumber1 = floor(texCoord.z  * 257.0);
+  float zSliceNumber1 = floor(texCoord.z  * steps);
 
   //As we use trilinear we go the next Z slice.
-  float zSliceNumber2 = min( zSliceNumber1 + 1.0, 257.0); //Clamp to 255
+  float zSliceNumber2 = min( zSliceNumber1 + 1.0, steps); //Clamp to 255
 
   //The Z slices are stored in a matrix of 16x16 of Z slices.
   //The original UV coordinates have to be rescaled by the tile numbers in each row and column.
-  texCoord.x /= 257.0;
+  texCoord.x /= steps;
 
   texCoordSlice1 = texCoordSlice2 = texCoord.xy;
 
+  float maxZ = steps;
+
   //Add an offset to the original UV coordinates depending on the row and column number.
-  texCoordSlice1.x += zSliceNumber1/257.0; //(mod(zSliceNumber1, 256.0 ) / 256.0);
+  texCoordSlice1.x += zSliceNumber1/(steps+1.0); //(mod(zSliceNumber1, 256.0 ) / 256.0);
   //texCoordSlice1.y += floor((256.0 - zSliceNumber1) / 17.0) / 17.0;
-  texCoordSlice2.x += zSliceNumber2/257.0; //(mod(zSliceNumber2, 256.0 ) / 256.0);
+  texCoordSlice2.x += zSliceNumber2/(steps+1.0); //(mod(zSliceNumber2, 256.0 ) / 256.0);
   //texCoordSlice2.y += floor((256.0 - zSliceNumber2) / 17.0) / 17.0;
 
 
@@ -64,7 +66,7 @@ vec4 sampleAs3DTexture( vec3 texCoord ) {
   //out2.a = 1.0;//colorSlice2.a;
 
   //How distant is zSlice1 to ZSlice2. Used to interpolate between one Z slice and the other.
-  float zDifference = mod(texCoord.z * 256.0, 1.0);
+  float zDifference = mod(texCoord.z * steps, 1.0);
 
   //Finally interpolate between the two intermediate colors of each Z slice.
   return mix(out1, out2, zDifference);
@@ -114,7 +116,10 @@ void main( void ) {
   float alphaSample;
 
   //Perform the ray marching iterations
-  for(int i = 0; i < MAX_STEPS; i++) {
+  for(int i = 0; i < MAX_STEPS_RAYCASTER; i++) {
+
+    if(i >= maxSteps)
+      break;
 
     //Get the voxel intensity value from the 3D texture.
     colorSample = sampleAs3DTexture( currentPosition );
