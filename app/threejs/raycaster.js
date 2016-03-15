@@ -31,7 +31,7 @@ function loadResource(url, callback) {
 }
 
 // Load shaders
-function loadShaders() {
+function loadShaders(arr) {
   loadResource('/assets/shaders/raycaster.firstpass.vs', function(err, data) {
     if(err) {
       console.log(err);
@@ -50,12 +50,12 @@ function loadShaders() {
         }
         vertexShader2 = data;
 
-        loadResource('/assets/shaders/raycaster.secondpass.fs', function(err, data) {
+        loadResource('/assets/shaders/raycaster.secondpass.hand.fs', function(err, data) {
           if(err) {
             console.log(err);
           }
           fragmentShader2 = data;
-          init();
+          init(arr);
         });
       });
     });
@@ -63,36 +63,33 @@ function loadShaders() {
 }
 
 
-function init() {
+function init(data) {
 
   container = $('#main');
 
   camera = new THREE.PerspectiveCamera( 60, screenSize.x/screenSize.y, 0.1, 100000 );
   camera.position.z = 2;
+  //camera.position.y = 2;
+  camera.lookAt(new THREE.Vector3(0,0,0));
 
   sceneFirstPass = new THREE.Scene();
 	sceneSecondPass = new THREE.Scene();
 
-  var randomdata = [];
-  for( var i = 0; i < 64; i++) {
-    randomdata[i] = [];
-    for( var j = 0; j < 64; j++) {
-      randomdata[i][j] = [];
-      for( var k = 0; k < 64; k++) {
-        randomdata[i][j].push(Math.min(Math.floor(Math.random()*4095*55.5), 4095));
-        if(Math.random()*1 >= 1/64.0*k*1.5) {
-          randomdata[i][j][k] = 0.0;
-        }
-      }
-    }
-    console.log("random data progress: " + i/64 + " %");
-  }
+  // var randomdata = [];
+  // randomdata.push(72);
+  // randomdata.push(72);
+  // randomdata.push(72);
+  // for( var i = 3; i < 72*72*72+3; i++) {
+  //   randomdata.push(Math.min(Math.floor(Math.random()*4095*55.5), 4095));
+  //   if(Math.random()*1 >= 0.3) {
+  //     randomdata[i] = 0.0;
+  //   }
+  // }
 
-  mosaic.createMosaicImage(64,64,randomdata, function(canvas) {//THREE.ImageUtils.loadTexture('/assets/images/bonsai.raw.png' );
+  mosaic.createMosaicImage(data, function(canvas) {
+
     cubeTexture = new THREE.Texture(canvas);
     cubeTexture.needsUpdate = true;
-    console.log(cubeTexture);
-    //cubeTexture = THREE.ImageUtils.loadTexture('/assets/images/bonsai.raw.png');
     cubeTexture.generateMipmaps = false;
     cubeTexture.minFilter = THREE.LinearFilter;
     cubeTexture.magFilter = THREE.LinearFilter;
@@ -138,7 +135,7 @@ function init() {
         },
   			steps : {
           type: "1f" ,
-          value: 64
+          value: 257
         },
   			alphaCorrection : {
           type: "1f" ,
@@ -161,7 +158,7 @@ function init() {
     renderer.setPixelRatio( window.devicePixelRatio );
     renderer.setSize( screenSize.x, screenSize.y );
     renderer.autoClear = true;
-    renderer.setClearColor("#FFFFFF");
+    renderer.setClearColor("#000000");
     console.log("clear color: ");
     console.log(renderer.getClearColor());
     renderer.domElement.setAttribute('id', 'canvas');
@@ -226,9 +223,13 @@ function updateTransferFunction() {
 	canvas.width = 256;
 	var ctx = canvas.getContext('2d');
 	var grd = ctx.createLinearGradient(0, 0, canvas.width -1 , canvas.height - 1);
-	grd.addColorStop(0.1, "#00FF00");
-	grd.addColorStop(0.7, "#FF0000");
-	grd.addColorStop(1.0, "#0000FF");
+
+  grd.addColorStop(0.0,'rgba(0,0,0,0.0)');
+  grd.addColorStop(0.1,'rgba(0,0,0,0.0)');
+  grd.addColorStop(0.2,'rgba(155,0,0,0.1)');
+  grd.addColorStop(0.25,'rgba(255,0,0,0.2)');
+  grd.addColorStop(0.7,'rgba(255,0,255,0.6)');
+  grd.addColorStop(1.0,'rgba(255,255,255,1.0)');
 	ctx.fillStyle = grd;
 	ctx.fillRect(0,0,canvas.width -1 ,canvas.height -1 );
 
@@ -246,7 +247,7 @@ function updateTransferFunction() {
 
 $(document).on('readyForCanvasRaycaster', function(event) {
   console.log("readyForCanvasRaycaster");
-  loadShaders();
+  //loadShaders();
 
   console.log("HALVEIS");
   $('#tf-holder').tfWidget(function (controlPoints, tfArray) {
@@ -258,8 +259,6 @@ $(document).on('readyForCanvasRaycaster', function(event) {
 
 });
 
-$(document).on('rotationValueChanged', function(event, x, y) {
-  console.log('rotationValueChanged: ' + x + ', ' + y);
-  rx = x;
-  ry = y;
+$(document).on('selectedFileReadyForRaycast', function(event) {
+  loadShaders(window.arr);
 });
