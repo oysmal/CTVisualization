@@ -68,23 +68,13 @@ function init(data) {
   container = $('#main');
 
   camera = new THREE.PerspectiveCamera( 60, screenSize.x/screenSize.y, 0.1, 100000 );
-  camera.position.z = 5;
-  //camera.position.y = -5;
+  camera.position.x = 1;
+  camera.position.y = 1;
+  camera.position.z = 1;
   camera.lookAt(new THREE.Vector3(0,0,0));
 
   sceneFirstPass = new THREE.Scene();
 	sceneSecondPass = new THREE.Scene();
-
-  // var randomdata = [];
-  // randomdata.push(72);
-  // randomdata.push(72);
-  // randomdata.push(72);
-  // for( var i = 3; i < 72*72*72+3; i++) {
-  //   randomdata.push(Math.min(Math.floor(Math.random()*4095*55.5), 4095));
-  //   if(Math.random()*1 >= 0.3) {
-  //     randomdata[i] = 0.0;
-  //   }
-  // }
 
   mosaic.createMosaicImage(data, function(canvas) {
 
@@ -140,10 +130,6 @@ function init(data) {
   			alphaCorrection : {
           type: "1f" ,
           value: 0.1
-        },
-        scaleFactor: {
-          type: "1f" ,
-          value: mosaic.scaleFactor
         }
       }
   	 });
@@ -230,10 +216,12 @@ function updateTransferFunction() {
 
   grd.addColorStop(0.0,'rgba(0,0,0,0.0)');
   grd.addColorStop(0.1,'rgba(0,0,0,0.0)');
-  grd.addColorStop(0.2,'rgba(0,255,255,0.1)');
-  grd.addColorStop(0.3,'rgba(155,0,0,0.1)');
-  grd.addColorStop(0.4,'rgba(255,0,0,0.2)');
-  grd.addColorStop(0.5,'rgba(255,255,255,0.6)');
+  grd.addColorStop(0.25,'rgba(255,195,170,0.05)');
+  grd.addColorStop(0.35,'rgba(155,0,0,0.05)');
+  grd.addColorStop(0.45,'rgba(155,0,0,0.1)');
+  grd.addColorStop(0.5,'rgba(255,0,0,0.1)');
+  grd.addColorStop(0.55,'rgba(200,200,200,0.5)');
+  grd.addColorStop(0.7,'rgba(255,255,255,0.6)');
   grd.addColorStop(1.0,'rgba(255,255,255,1.0)');
 	ctx.fillStyle = grd;
 	ctx.fillRect(0,0,canvas.width -1 ,canvas.height -1 );
@@ -271,8 +259,8 @@ $(document).on('selectedFileReadyForRaycast', function(event) {
 $(document).on('cameraChangeEvent', function(event, cam) {
   console.log("cameraChangeEvent");
   console.log(cam);
-  camera.position.x = cam.x;
-  camera.position.y = cam.y;
-  camera.position.z = cam.z;
+  camera.position.x = cam.x || camera.position.x;
+  camera.position.y = cam.y || camera.position.y;
+  camera.position.z = cam.z || camera.position.z;
   camera.lookAt(new THREE.Vector3(0,0,0));
 });

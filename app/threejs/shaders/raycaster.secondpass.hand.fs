@@ -21,21 +21,21 @@ vec4 sampleAs3DTexture( vec3 texCoord ) {
 
   //The z coordinate determines which Z slice we have to look for.
   //Z slice number goes from 0 to 255.
-  float zSliceNumber1 = floor(texCoord.z  * 256.0);
+  float zSliceNumber1 = floor(texCoord.z  * 257.0);
 
   //As we use trilinear we go the next Z slice.
-  float zSliceNumber2 = min( zSliceNumber1 + 1.0, 256.0); //Clamp to 255
+  float zSliceNumber2 = min( zSliceNumber1 + 1.0, 257.0); //Clamp to 255
 
   //The Z slices are stored in a matrix of 16x16 of Z slices.
   //The original UV coordinates have to be rescaled by the tile numbers in each row and column.
-  texCoord.x /= 256.0;
+  texCoord.x /= 257.0;
 
   texCoordSlice1 = texCoordSlice2 = texCoord.xy;
 
   //Add an offset to the original UV coordinates depending on the row and column number.
-  texCoordSlice1.x += zSliceNumber1/256.0; //(mod(zSliceNumber1, 256.0 ) / 256.0);
+  texCoordSlice1.x += zSliceNumber1/257.0; //(mod(zSliceNumber1, 256.0 ) / 256.0);
   //texCoordSlice1.y += floor((256.0 - zSliceNumber1) / 17.0) / 17.0;
-  texCoordSlice2.x += zSliceNumber2/256.0; //(mod(zSliceNumber2, 256.0 ) / 256.0);
+  texCoordSlice2.x += zSliceNumber2/257.0; //(mod(zSliceNumber2, 256.0 ) / 256.0);
   //texCoordSlice2.y += floor((256.0 - zSliceNumber2) / 17.0) / 17.0;
 
 

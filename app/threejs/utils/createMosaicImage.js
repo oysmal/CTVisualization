@@ -1,6 +1,6 @@
 var mosaic = {};
 
-mosaic.createOneImage = function(sizex, sizey, data) {
+mosaic.createOneImage = function(sizex, sizey, data, callback) {
 	var canvas = document.createElement("canvas");
 	canvas.setAttribute("width", sizex);
 	canvas.setAttribute("height", sizey);
@@ -23,7 +23,7 @@ mosaic.createOneImage = function(sizex, sizey, data) {
 
 	var image = new Image();
 	image.src = canvas.toDataURL("/image/png");
-	return image;
+	callback(image);
 }
 
 mosaic.createMosaicImage = function(data, callback) {
@@ -45,9 +45,10 @@ mosaic.createMosaicImage = function(data, callback) {
 
 
 	for(var i = 0; i < sizez; i++) {
-		var image = this.createOneImage(sizex, sizey, data.slice(i*sizex*sizey, i*sizex*sizey+sizex*sizey));
-		ctx.drawImage(image, sizex*i/mosaic.scaleFactor, 0, sizex/mosaic.scaleFactor, sizey/mosaic.scaleFactor);
-		console.log("image generation progress: " + Math.floor(i/sizez*100) + " %");
+		this.createOneImage(sizex, sizey, data.slice(i*sizex*sizey, i*sizex*sizey+sizex*sizey), function(image) {
+			ctx.drawImage(image, sizex*i/mosaic.scaleFactor, 0, sizex/mosaic.scaleFactor, sizey/mosaic.scaleFactor);
+			console.log("image generation progress: " + Math.floor(i/sizez*100) + " %");
+		});
 	}
 
 	console.log("data");
