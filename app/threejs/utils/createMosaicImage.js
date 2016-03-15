@@ -9,14 +9,14 @@ mosaic.createOneImage = function(sizex, sizey, data) {
 	for(var i = 0; i < sizey; i++) {
 		for(var j = 0; j < sizex; j++) {
 			var id = ctx.createImageData(1,1);
-			var msb = data[i*sizex+j] & 0xFF00;
-			msb = msb >> 8;
-			var lsb = data[i*sizex+j] & 0x00FF;
+			// var msb = data[i*sizex+j] & 0xFF00;
+			// msb = msb >> 8;
+			// var lsb = data[i*sizex+j] & 0x00FF;
 			// Use bitmask for spliting the uint16 value into two uint8 to fit into img
-			id.data[0] = msb;	// r
-			id.data[1] = lsb;	// g
+			id.data[0] = 0;//msb;	// r
+			id.data[1] = 0;//lsb;	// g
 			id.data[2] = 0;	// b
-			id.data[3] = 255;//Math.floor(data[i][j]/4095*255);	// a
+			id.data[3] = Math.floor(data[i*sizex+j]/4095*255);	// a
 			ctx.putImageData(id, j, i); // row based, so add to x=j, y=i
 		}
 	}
@@ -35,22 +35,19 @@ mosaic.createMosaicImage = function(data, callback) {
 
 
 	var canvas = document.createElement("canvas");
-	canvas.setAttribute("width", sizex*Math.floor(Math.sqrt(sizez)));
-	canvas.setAttribute("height", sizey*Math.floor(Math.sqrt(sizez)));
+	mosaic.scaleFactor = 1.0;
+	if (sizex*sizey > 16384) {
+		mosaic.scaleFactor = sizex*sizez/16384.0;
+	}
+	canvas.setAttribute("width", sizex*sizez/mosaic.scaleFactor);
+	canvas.setAttribute("height", sizey/mosaic.scaleFactor);
 	var ctx = canvas.getContext('2d');
 
-	var row = 0;
-	var col = 0;
 
 	for(var i = 0; i < sizez; i++) {
-		col = i % Math.ceil(Math.sqrt(sizez));
 		var image = this.createOneImage(sizex, sizey, data.slice(i*sizex*sizey, i*sizex*sizey+sizex*sizey));
-		ctx.drawImage(image, sizex*col, sizey*row, sizex, sizey);
+		ctx.drawImage(image, sizex*i/mosaic.scaleFactor, 0, sizex/mosaic.scaleFactor, sizey/mosaic.scaleFactor);
 		console.log("image generation progress: " + Math.floor(i/sizez*100) + " %");
-
-		if(col == Math.ceil(Math.sqrt(sizez))-1) {
-			row++;
-		}
 	}
 
 	console.log("data");

@@ -1,8 +1,9 @@
 <div id="main">
   <form class="form-control form">
-    <label>Rotation x: <input class="form-control input" type="text" data-ng-model="rotation.x"></input></label>
-    <label>Rotation y: <input class="form-control input" type="text" data-ng-model="rotation.y"></input></label>
-    <button class="btn btn-primary" data-ng-click="updateRotation()">Update</button>
+    <label>camera position x: <input class="form-control input" type="text" data-ng-model="camera.x"></input></label>
+    <label>camera position y: <input class="form-control input" type="text" data-ng-model="camera.y"></input></label>
+    <label>camera position z: <input class="form-control input" type="text" data-ng-model="camera.z"></input></label>
+    <button class="btn btn-primary" data-ng-click="onChangeCamera()">Update camera pos</button>
     <img id="transferTexture" alt="transferfunc"></img>
     <div id="tf-holder"></div>
     <body>

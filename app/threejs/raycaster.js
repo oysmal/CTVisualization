@@ -68,8 +68,8 @@ function init(data) {
   container = $('#main');
 
   camera = new THREE.PerspectiveCamera( 60, screenSize.x/screenSize.y, 0.1, 100000 );
-  camera.position.z = 2;
-  //camera.position.y = 2;
+  camera.position.z = 5;
+  //camera.position.y = -5;
   camera.lookAt(new THREE.Vector3(0,0,0));
 
   sceneFirstPass = new THREE.Scene();
@@ -139,7 +139,11 @@ function init(data) {
         },
   			alphaCorrection : {
           type: "1f" ,
-          value: 1.0
+          value: 0.1
+        },
+        scaleFactor: {
+          type: "1f" ,
+          value: mosaic.scaleFactor
         }
       }
   	 });
@@ -226,9 +230,10 @@ function updateTransferFunction() {
 
   grd.addColorStop(0.0,'rgba(0,0,0,0.0)');
   grd.addColorStop(0.1,'rgba(0,0,0,0.0)');
-  grd.addColorStop(0.2,'rgba(155,0,0,0.1)');
-  grd.addColorStop(0.25,'rgba(255,0,0,0.2)');
-  grd.addColorStop(0.7,'rgba(255,0,255,0.6)');
+  grd.addColorStop(0.2,'rgba(0,255,255,0.1)');
+  grd.addColorStop(0.3,'rgba(155,0,0,0.1)');
+  grd.addColorStop(0.4,'rgba(255,0,0,0.2)');
+  grd.addColorStop(0.5,'rgba(255,255,255,0.6)');
   grd.addColorStop(1.0,'rgba(255,255,255,1.0)');
 	ctx.fillStyle = grd;
 	ctx.fillRect(0,0,canvas.width -1 ,canvas.height -1 );
@@ -261,4 +266,13 @@ $(document).on('readyForCanvasRaycaster', function(event) {
 
 $(document).on('selectedFileReadyForRaycast', function(event) {
   loadShaders(window.arr);
+});
+
+$(document).on('cameraChangeEvent', function(event, cam) {
+  console.log("cameraChangeEvent");
+  console.log(cam);
+  camera.position.x = cam.x;
+  camera.position.y = cam.y;
+  camera.position.z = cam.z;
+  camera.lookAt(new THREE.Vector3(0,0,0));
 });

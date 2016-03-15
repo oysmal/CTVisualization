@@ -6,47 +6,52 @@ var main = angular.module('ctMain', []);
 main.controller('MainController', ['$scope', function($scope) {
   $(document).trigger('readyForCanvasRaycaster');
   $(document).trigger('readyForCanvas');
+  $scope.files = [];
+  $scope.activeFileIndex = 0;
 
-  $scope.handleFileSelect = function(evt) {
-    var files = evt.target.files; // FileList object
+  document.getElementById('files').addEventListener('change', function(evt) {
+    console.log(evt);
+    $scope.files.push(evt.target.files); // FileList object
 
     // files is a FileList of File objects. List some properties.
     var output = [];
     for (var i = 0, f; f = files[i]; i++) {
-      output.push('<li><strong>', escape(f.name), '</strong> (', f.type || 'n/a', ') - ',
-      f.size, ' bytes, last modified: ',
-      f.lastModifiedDate ? f.lastModifiedDate.toLocaleDateString() : 'n/a',
-      '</li>');
+      output.push('<li data-ng-click=changeActiveFile('+i+')><strong>', escape(f.name), '</strong> (', f.type || 'n/a', ') - ',
+      f.size, '</li>');
     }
     document.getElementById('list').innerHTML = '<ul>' + output.join('') + '</ul>';
 
     $scope.readFile();
-  }
+  }, false);
 
-  document.getElementById('files').addEventListener('change', $scope.handleFileSelect, false);
+  $scope.changeActiveFile = function(i) {
+    $scope.activeFileIndex = i;
+    $scope.readFile();
+  }
 
   $scope.readFile = function() {
 
-    var files = document.getElementById('files').files;
-    if (!files.length) {
+    if (!$scope.files.length) {
       alert('Please select a file!');
       return;
     }
 
-    var file = files[0];
-
+    var file = $scope.files[$scope.activeFileIndex][0];
     var reader = new FileReader();
 
-    // If we use onloadend, we need to check the readyState.
     reader.onloadend = function(evt) {
       if (evt.target.readyState == FileReader.DONE) { // DONE == 2
-        console.log(evt.target.result);
         window.arr = new Uint16Array(evt.target.result);
-        console.log(arr);
-        document.getElementById('byte').textContent += arr[0] + ", " + arr[1] + ", " + arr[2] + ", " + arr[3] + ", " + arr[4] + ", " + arr[5];
         $(document).trigger('selectedFileReadyForRaycast');
       }
     };
+
     reader.readAsArrayBuffer(file);
+  }
+
+  $scope.onChangeCamera = function() {
+    console.log("trigger");
+    console.log($scope.camera);
+    $(document).trigger("cameraChangeEvent", $scope.camera);
   }
 }]);

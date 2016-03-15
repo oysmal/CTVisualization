@@ -5,6 +5,7 @@ varying vec4 projectedCoords;
 uniform sampler2D tex, cubeTex, transferTex;
 uniform float steps;
 uniform float alphaCorrection;
+uniform float scaleFactor;
 
 // The maximum distance through our rendering volume is sqrt(3).
 // The maximum number of steps we take to travel a distance of 1 is 512.
@@ -27,16 +28,15 @@ vec4 sampleAs3DTexture( vec3 texCoord ) {
 
   //The Z slices are stored in a matrix of 16x16 of Z slices.
   //The original UV coordinates have to be rescaled by the tile numbers in each row and column.
-  texCoord.x /= 16.0;
-  texCoord.y /= 16.0;//(244.0/124.0);
+  texCoord.x /= 256.0;
 
   texCoordSlice1 = texCoordSlice2 = texCoord.xy;
 
   //Add an offset to the original UV coordinates depending on the row and column number.
-  texCoordSlice1.x += (mod(zSliceNumber1, 17.0 ) / 17.0);
-  texCoordSlice1.y += floor((256.0 - zSliceNumber1) / 17.0) / 17.0;
-  texCoordSlice2.x += (mod(zSliceNumber2, 17.0 ) / 17.0);
-  texCoordSlice2.y += floor((256.0 - zSliceNumber2) / 17.0) / 17.0;
+  texCoordSlice1.x += zSliceNumber1/256.0; //(mod(zSliceNumber1, 256.0 ) / 256.0);
+  //texCoordSlice1.y += floor((256.0 - zSliceNumber1) / 17.0) / 17.0;
+  texCoordSlice2.x += zSliceNumber2/256.0; //(mod(zSliceNumber2, 256.0 ) / 256.0);
+  //texCoordSlice2.y += floor((256.0 - zSliceNumber2) / 17.0) / 17.0;
 
 
   //Get the opacity value from the 2D texture.
@@ -44,24 +44,24 @@ vec4 sampleAs3DTexture( vec3 texCoord ) {
   colorSlice1 = texture2D( cubeTex, texCoordSlice1 );
   colorSlice2 = texture2D( cubeTex, texCoordSlice2 );
 
-  float val1 = colorSlice1.r*256.0;
-  val1 = (val1*255.0 + colorSlice1.g*255.0)/4095.0;
-  colorSlice1.a = val1;
+//  float val1 = colorSlice1.r*256.0;
+//  val1 = (val1*255.0 + colorSlice1.g*255.0)/4095.0;
+//  colorSlice1.a = val1;
 
 
-  float val2 = colorSlice2.r*256.0;
-  val2 = (val1*255.0 + colorSlice1.g*255.0)/4095.0;
-  colorSlice2.a = val2;
+//  float val2 = colorSlice2.r*256.0;
+//  val2 = (val1*255.0 + colorSlice1.g*255.0)/4095.0;
+//  colorSlice2.a = val2;
 
-  if(val1 < 0.1) {
-    return vec4(0.0);
-  }
+//  if(val1 < 0.1) {
+//    return vec4(0.0);
+//  }
 
   //Based on the opacity obtained earlier, get the RGB color in the transfer function texture.
-  out1 = texture2D( transferTex, vec2( val1, 1.0) );
-  out2 = texture2D( transferTex, vec2( val2, 1.0) );
-  out1.a = 1.0;//colorSlice1.a;
-  out2.a = 1.0;//colorSlice2.a;
+  out1 = texture2D( transferTex, vec2( colorSlice1.a, 1.0) );
+  out2 = texture2D( transferTex, vec2( colorSlice2.a, 1.0) );
+  //out1.a = 1.0;//colorSlice1.a;
+  //out2.a = 1.0;//colorSlice2.a;
 
   //How distant is zSlice1 to ZSlice2. Used to interpolate between one Z slice and the other.
   float zDifference = mod(texCoord.z * 256.0, 1.0);
@@ -108,7 +108,7 @@ void main( void ) {
 
   //If we have twice as many samples, we only need ~1/2 the alpha per sample.
   //Scaling by 256/10 just happens to give a good value for the alphaCorrection slider.
-  float alphaScaleFactor = 1.0;//6.3 * delta;
+  float alphaScaleFactor = 25.6 * delta;
 
   vec4 colorSample;
   float alphaSample;
