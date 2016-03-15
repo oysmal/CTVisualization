@@ -33,7 +33,7 @@ $scope.handleFileSelect = function(evt) {
   }
   document.getElementById('list').innerHTML = '<ul>' + output.join('') + '</ul>';
 
-  readBlob(0,1);
+  $scope.readBlob(0,1);
 }
 
 document.getElementById('files').addEventListener('change', $scope.handleFileSelect, false);
@@ -63,4 +63,3 @@ $scope.readBlob = function(opt_startByte, opt_stopByte) {
   reader.readAsArrayBuffer(file);
 }
 }]);
-
