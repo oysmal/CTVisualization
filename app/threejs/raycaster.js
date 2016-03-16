@@ -13,6 +13,10 @@ var spheres = [];
 
 var vertexShader1, fragmentShader1;
 var vertexShader2, fragmentShader2;
+var transferTextureIsUpdated = false;
+
+var grd, canvas, ctx;
+var controlPointsTF = [];
 
 var screenSize = {x: 640, y: 480};
 var windowHalfX = screenSize.x / 2;
@@ -68,9 +72,9 @@ function init(data) {
   container = $('#main');
 
   camera = new THREE.PerspectiveCamera( 60, screenSize.x/screenSize.y, 0.1, 100000 );
-  camera.position.x = 1;
-  camera.position.y = 1;
-  camera.position.z = 1;
+  camera.position.x = 0;
+  camera.position.y = 1.5;
+  camera.position.z = -0.1;
   camera.lookAt(new THREE.Vector3(0,0,0));
 
   sceneFirstPass = new THREE.Scene();
@@ -86,6 +90,7 @@ function init(data) {
 
     container.append(canvas);
 
+    readyGradientForTransferfunction();
     transferTexture = updateTransferFunction();
 
     rtTexture = new THREE.WebGLRenderTarget( screenSize.x, screenSize.y,
@@ -199,6 +204,11 @@ function animate() {
 
 function render() {
 
+  if (transferTextureIsUpdated) {
+    console.log(controlPointsTF);
+    updateTextures();
+    transferTextureIsUpdated = false;
+  }
   //var delta = clock.getDelta();
 	//Render first pass and store the world space coords of the back face fragments into the texture.
 	renderer.render( sceneFirstPass, camera, rtTexture, true );
@@ -207,25 +217,38 @@ function render() {
 	materialSecondPass.uniforms.steps.value = mosaic.sizez;
 	materialSecondPass.uniforms.alphaCorrection.value = 1.0;
 
+
+
 }
 
 function updateTextures(value) {
   materialSecondPass.uniforms.transferTex.value = updateTransferFunction();
 }
 
-function updateTransferFunction() {
-	var canvas = document.createElement('canvas');
-	canvas.height = 20;
-	canvas.width = 256;
-	var ctx = canvas.getContext('2d');
-	var grd = ctx.createLinearGradient(0, 0, canvas.width -1 , canvas.height - 1);
+function readyGradientForTransferfunction() {
+  canvas = document.createElement('canvas');
+  canvas.height = 20;
+  canvas.width = 256;
+  ctx = canvas.getContext('2d');
 
-  grd.addColorStop(0.1,'rgba(255,255,255,0.0)');
-  grd.addColorStop(0.2,'rgba(255,0,0,0.0)');
-  grd.addColorStop(0.45,'rgba(255,64,35,0.1)');
-  grd.addColorStop(0.65,'rgba(0,0,255,0.4)');
-  grd.addColorStop(0.75,'rgba(0,255,0,0.7)');
-  grd.addColorStop(1.0,'rgba(255,255,0,0.9)');
+}
+
+function updateTransferFunction() {
+  ctx.clearRect(0,0,canvas.width, canvas.height);
+
+  grd = ctx.createLinearGradient(0, 0, canvas.width -1 , canvas.height - 1);
+
+  for (var i = 0; i < controlPointsTF.length; i++) {
+    grd.addColorStop(controlPointsTF[i].index,
+      controlPointsTF[i].rgba);
+  }
+  
+  // grd.addColorStop(0.1,'rgba(255,255,255,0.0)');
+  // grd.addColorStop(0.2,'rgba(255,0,0,0.0)');
+  // grd.addColorStop(0.45,'rgba(255,64,35,0.1)');
+  // grd.addColorStop(0.65,'rgba(0,0,255,0.4)');
+  // grd.addColorStop(0.75,'rgba(0,255,0,0.7)');
+  // grd.addColorStop(1.0,'rgba(255,255,0,0.9)');
 
 
   // grd.addColorStop(0.0,'rgba(0,0,0,0.0)');
@@ -252,22 +275,43 @@ function updateTransferFunction() {
 }
 
 
+
 $(document).on('readyForCanvasRaycaster', function(event) {
   console.log("readyForCanvasRaycaster");
   //loadShaders();
 
-  console.log("HALVEIS");
+  
   $('#tf-holder').tfWidget(function (controlPoints, tfArray) {
-
-
-    console.log("TRANSFERFUNCTION");
+    var temp = [];
+    for(var i = 0; i < controlPoints.length; i++) {
+      
+      //var rgb = controlPoints[i].rgb;
+      //rgb = rgb.replace(/[^\d,]/g, '').split(',');
+      //var alpha = controlPoints[i].alpha;
+      
+      temp[i] = controlPoints[i];
+      temp[i].index = controlPoints[i].index;
+      //temp[i].rgba = 'rgba('+rgb[0]+','+rgb[1]+','+rgb[2]+','+alpha+')';
+      temp[i].rgba = convertHex(controlPoints[i].rgb, controlPoints[i].alpha);
+    }
+    controlPointsTF = temp;
+    transferTextureIsUpdated = true;
   });
-
-
 });
+
+function convertHex(hex,opacity){
+    var hex = hex.replace('#','');
+    var r = parseInt(hex.substring(0,2), 16);
+    var g = parseInt(hex.substring(2,4), 16);
+    var b = parseInt(hex.substring(4,6), 16);
+
+    var result = 'rgba('+r+','+g+','+b+','+opacity+')';
+    return result;
+}
 
 $(document).on('selectedFileReadyForRaycast', function(event) {
   loadShaders(window.arr);
+
 });
 
 $(document).on('cameraChangeEvent', function(event, cam) {
