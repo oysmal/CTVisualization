@@ -56,7 +56,6 @@ mosaic.createMosaicImage = function(data, callback) {
 	console.log(data);
 	console.log(data[0]);
 	console.log("sizes: " + sizex + ", " + sizey + ", " + sizez);
-	console.log("mosaizz: " + mosaic.sizez);
 
 	callback(canvas);
 }

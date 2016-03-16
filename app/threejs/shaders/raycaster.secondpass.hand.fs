@@ -32,12 +32,11 @@ vec4 sampleAs3DTexture( vec3 texCoord ) {
 
   texCoordSlice1 = texCoordSlice2 = texCoord.xy;
 
-  float maxZ = steps;
 
   //Add an offset to the original UV coordinates depending on the row and column number.
-  texCoordSlice1.x += zSliceNumber1/(steps+1.0); //(mod(zSliceNumber1, 256.0 ) / 256.0);
+  texCoordSlice1.x += zSliceNumber1/steps; //(mod(zSliceNumber1, 256.0 ) / 256.0);
   //texCoordSlice1.y += floor((256.0 - zSliceNumber1) / 17.0) / 17.0;
-  texCoordSlice2.x += zSliceNumber2/(steps+1.0); //(mod(zSliceNumber2, 256.0 ) / 256.0);
+  texCoordSlice2.x += zSliceNumber2/steps; //(mod(zSliceNumber2, 256.0 ) / 256.0);
   //texCoordSlice2.y += floor((256.0 - zSliceNumber2) / 17.0) / 17.0;
 
 
