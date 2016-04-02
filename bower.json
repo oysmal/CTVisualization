@@ -1,5 +1,5 @@
 {
-  "name": "svalbard",
+  "name": "CTVisualization",
   "description": "threejs scenegraph",
   "main": "public/bundle.min.js",
   "authors": [
