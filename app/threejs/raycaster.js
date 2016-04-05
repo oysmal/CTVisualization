@@ -1,3 +1,7 @@
+import Mosaic from './utils/createMosaicImage.js';
+import THREE from '../../bower_components/three.js/three.js';
+import $ from '../../bower_components/jquery/dist/jquery.min.js';
+
 
 var container;
 
@@ -79,6 +83,8 @@ function init(data) {
 
   sceneFirstPass = new THREE.Scene();
 	sceneSecondPass = new THREE.Scene();
+
+  var mosaic = new Mosaic();
 
   mosaic.createMosaicImage(data, function(canvas) {
 
@@ -242,7 +248,7 @@ function updateTransferFunction() {
     grd.addColorStop(controlPointsTF[i].index,
       controlPointsTF[i].rgba);
   }
-  
+
   // grd.addColorStop(0.1,'rgba(255,255,255,0.0)');
   // grd.addColorStop(0.2,'rgba(255,0,0,0.0)');
   // grd.addColorStop(0.45,'rgba(255,64,35,0.1)');
@@ -280,15 +286,15 @@ $(document).on('readyForCanvasRaycaster', function(event) {
   console.log("readyForCanvasRaycaster");
   //loadShaders();
 
-  
+
   $('#tf-holder').tfWidget(function (controlPoints, tfArray) {
     var temp = [];
     for(var i = 0; i < controlPoints.length; i++) {
-      
+
       //var rgb = controlPoints[i].rgb;
       //rgb = rgb.replace(/[^\d,]/g, '').split(',');
       //var alpha = controlPoints[i].alpha;
-      
+
       temp[i] = controlPoints[i];
       temp[i].index = controlPoints[i].index;
       //temp[i].rgba = 'rgba('+rgb[0]+','+rgb[1]+','+rgb[2]+','+alpha+')';
@@ -322,3 +328,5 @@ $(document).on('cameraChangeEvent', function(event, cam) {
   camera.position.z = cam.z || camera.position.z;
   camera.lookAt(new THREE.Vector3(0,0,0));
 });
+
+export default init;

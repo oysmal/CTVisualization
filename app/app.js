@@ -1,20 +1,8 @@
-'use strict';
+// move index.html to output folder
+import $ from '../bower_components/jquery/dist/jquery.min.js';
 
-/* App Module */
 
-var ctApp = angular.module('ctApp', [
-  'ngRoute',
-  'ctMain',
-]);
+import loadFile from './components/Main/loadFile.js';
+loadFile();
 
-ctApp.config(['$routeProvider',
-  function($routeProvider) {
-    $routeProvider.
-      when('/', {
-        templateUrl: 'components/Main/main.html',
-        controller: 'MainController'
-      }).
-      otherwise({
-        redirectTo: '/'
-      });
-  }]);
+$(document.body).load('./components/Main/main.html');

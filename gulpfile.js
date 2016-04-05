@@ -9,9 +9,14 @@ sourcemaps = require('gulp-sourcemaps'),
 uglify = require('gulp-uglify'),
 ngAnnotate = require('gulp-ng-annotate'),
 concat = require('gulp-concat'),
+watchify = require('watchify'),
 del = require('del'),
 bower = require('gulp-bower'),
-mainBowerFiles = require('main-bower-files');
+mainBowerFiles = require('main-bower-files'),
+source = require('vinyl-source-stream'),
+buffer = require('vinyl-buffer'),
+browserify = require('browserify'),
+babel = require('babelify');
 
 
 var OPTS = {
@@ -21,7 +26,8 @@ var OPTS = {
     javascripts : 'app/**/*.js',
     images : 'app/resources/**/*.{png,gif,jpeg,jpg}',
     shaders : 'app/threejs/shaders/**/*.{vs,fs}',
-    root : 'app'
+    root : 'app',
+    entryPoint : 'app/app.js'
   },
   dest: {
     html : 'public',
@@ -34,12 +40,9 @@ var OPTS = {
   }
 };
 
-// create a default task and just log a message
-gulp.task('default', ['watch'] , function() {
-  return gutil.log('Gulp is running!')
-});
+gulp.task('default', ['watch', 'watchJS']);
 
-gulp.task('build', ['copyHtml', 'copyImages', 'copyShaders', 'buildStylesheets', 'buildJS', 'bower-files']);
+gulp.task('build', ['copyHtml', 'copyImages', 'copyShaders', 'buildStylesheets', 'buildJS']);
 
 // configure the jshint task
 gulp.task('jshint', function() {
@@ -79,12 +82,12 @@ gulp.task('buildStylesheets', function() {
 });
 
 gulp.task('buildJS', function() {
-  return gulp.src(OPTS.src.javascripts)
-  .pipe(sourcemaps.init())
-  .pipe(concat(OPTS.dest.bundleName))
-  //only uglify if gulp is ran with '--type production'
-  .pipe(ngAnnotate())
-  .pipe(gutil.env.type === 'production' ? uglify() : gutil.noop())
+  browserify({entries:OPTS.src.entryPoint, debug: true })
+  .transform(babel)
+  .on('error',gutil.log)
+  .bundle()
+  .on('error',gutil.log)
+  .pipe(source('bundle.js'))
   .pipe(sourcemaps.write())
   .pipe(gulp.dest(OPTS.dest.root));
 });
@@ -99,6 +102,38 @@ gulp.task('clean:public', function () {
     'public/[^.]*'
   ]);
 });
+
+gulp.task('watchJS', function() {
+  return compile(true);
+})
+
+
+function compile(watch) {
+  //var bundler = browserify({entries:OPTS.src.entryPoint, debug: true });
+
+  function rebundle() {
+      browserify({entries:OPTS.src.entryPoint, debug: true })
+      .transform(babel)
+      .on('error',gutil.log)
+      .bundle()
+      .on('error',gutil.log)
+      .pipe(source('bundle.js'))
+      .pipe(source('public'))
+      // .pipe(buffer())
+      // .pipe(sourcemaps.init({ loadMaps: true }))
+      // .pipe(sourcemaps.write('./'))
+      // .pipe(gulp.dest('./public'));
+  }
+
+  // if (watch) {
+  //   bundler.on('update', function() {
+  //     console.log('-> bundling...');
+  //     rebundle();
+  //   });
+  // }
+
+  rebundle();
+}
 
 //######################################################################
 // End build tasks
