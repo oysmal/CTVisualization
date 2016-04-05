@@ -3,31 +3,31 @@
 // grab our gulp packages
 var gulp  = require('gulp'),
 gutil = require('gulp-util'),
-jshint = require('gulp-jshint'),
+eslint = require('gulp-eslint'),
 sass = require('gulp-sass'),
 sourcemaps = require('gulp-sourcemaps'),
 uglify = require('gulp-uglify'),
 ngAnnotate = require('gulp-ng-annotate'),
 concat = require('gulp-concat'),
-watchify = require('watchify'),
 del = require('del'),
 bower = require('gulp-bower'),
 mainBowerFiles = require('main-bower-files'),
 source = require('vinyl-source-stream'),
 buffer = require('vinyl-buffer'),
 browserify = require('browserify'),
-babel = require('babelify');
+babelify = require('babelify'),
+fs = require("fs");
 
 
 var OPTS = {
   src: {
     html : 'app/**/*.html',
     stylesheets : 'app/styles/*.{scss,css,sass}',
-    javascripts : 'app/**/*.js',
+    javascripts : 'app/**/*.{js,es6}',
     images : 'app/resources/**/*.{png,gif,jpeg,jpg}',
     shaders : 'app/threejs/shaders/**/*.{vs,fs}',
     root : 'app',
-    entryPoint : 'app/app.js'
+    entryPoint : 'app/app.es6'
   },
   dest: {
     html : 'public',
@@ -40,20 +40,21 @@ var OPTS = {
   }
 };
 
-gulp.task('default', ['watch', 'watchJS']);
+gulp.task('default', ['watch']);
 
-gulp.task('build', ['copyHtml', 'copyImages', 'copyShaders', 'buildStylesheets', 'buildJS']);
+gulp.task('build', ['copyHtml', 'copyImages', 'copyShaders', 'buildStylesheets', 'buildJS', 'bower-files']);
 
 // configure the jshint task
-gulp.task('jshint', function() {
+gulp.task('lint', function() {
   return gulp.src(OPTS.src.javascripts)
-  .pipe(jshint())
-  .pipe(jshint.reporter('jshint-stylish'));
+  .pipe(eslint())
+  .pipe(eslint.format())
+  .pipe(eslint.failAfterError());
 });
 
 // configure which files to watch and what tasks to use on file changes
 gulp.task('watch', function() {
-  gulp.watch(OPTS.src.root, ['jshint']);
+  gulp.watch(OPTS.src.javascripts, ['lint', 'buildJS']);
   gulp.watch(OPTS.src.stylesheets, ['buildStylesheets']);
 });
 
@@ -75,20 +76,17 @@ gulp.task('copyShaders', function() {
 
 gulp.task('buildStylesheets', function() {
   return gulp.src(OPTS.src.stylesheets)
-  .pipe(sourcemaps.init())  // Process the original sources
-//  .pipe(sass())
-  .pipe(sourcemaps.write())  // Process the original sources
+  .pipe(sass())
   .pipe(gulp.dest(OPTS.dest.stylesheets));
 });
 
 gulp.task('buildJS', function() {
-  browserify({entries:OPTS.src.entryPoint, debug: true })
-  .transform(babel)
-  .on('error',gutil.log)
+  browserify({debug: true })
+  .transform(babelify, {extensions: ['.es6']})
+  .require(OPTS.src.entryPoint, {entry: true})
   .bundle()
   .on('error',gutil.log)
   .pipe(source('bundle.js'))
-  .pipe(sourcemaps.write())
   .pipe(gulp.dest(OPTS.dest.root));
 });
 
@@ -102,38 +100,6 @@ gulp.task('clean:public', function () {
     'public/[^.]*'
   ]);
 });
-
-gulp.task('watchJS', function() {
-  return compile(true);
-})
-
-
-function compile(watch) {
-  //var bundler = browserify({entries:OPTS.src.entryPoint, debug: true });
-
-  function rebundle() {
-      browserify({entries:OPTS.src.entryPoint, debug: true })
-      .transform(babel)
-      .on('error',gutil.log)
-      .bundle()
-      .on('error',gutil.log)
-      .pipe(source('bundle.js'))
-      .pipe(source('public'))
-      // .pipe(buffer())
-      // .pipe(sourcemaps.init({ loadMaps: true }))
-      // .pipe(sourcemaps.write('./'))
-      // .pipe(gulp.dest('./public'));
-  }
-
-  // if (watch) {
-  //   bundler.on('update', function() {
-  //     console.log('-> bundling...');
-  //     rebundle();
-  //   });
-  // }
-
-  rebundle();
-}
 
 //######################################################################
 // End build tasks
