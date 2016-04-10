@@ -1,4 +1,4 @@
-import Mosaic from './utils/createMosaicImage.js';
+import Mosaic from './utils/createMosaicImage.es6';
 import THREE from '../../bower_components/three.js/three.js';
 import $ from '../../bower_components/jquery/dist/jquery.min.js';
 
@@ -74,6 +74,7 @@ function loadShaders(arr) {
 function init(data) {
 
   container = $('#main');
+  tfWidgetInit();
 
   camera = new THREE.PerspectiveCamera( 60, screenSize.x/screenSize.y, 0.1, 100000 );
   camera.position.x = 0;
@@ -249,23 +250,6 @@ function updateTransferFunction() {
       controlPointsTF[i].rgba);
   }
 
-  // grd.addColorStop(0.1,'rgba(255,255,255,0.0)');
-  // grd.addColorStop(0.2,'rgba(255,0,0,0.0)');
-  // grd.addColorStop(0.45,'rgba(255,64,35,0.1)');
-  // grd.addColorStop(0.65,'rgba(0,0,255,0.4)');
-  // grd.addColorStop(0.75,'rgba(0,255,0,0.7)');
-  // grd.addColorStop(1.0,'rgba(255,255,0,0.9)');
-
-
-  // grd.addColorStop(0.0,'rgba(0,0,0,0.0)');
-  // grd.addColorStop(0.1,'rgba(0,0,0,0.0)');
-  // grd.addColorStop(0.25,'rgba(255,195,170,0.05)');
-  // grd.addColorStop(0.35,'rgba(155,0,0,0.05)');
-  // grd.addColorStop(0.45,'rgba(155,0,0,0.1)');
-  // grd.addColorStop(0.5,'rgba(255,0,0,0.1)');
-  // grd.addColorStop(0.55,'rgba(200,200,200,0.5)');
-  // grd.addColorStop(0.7,'rgba(255,255,255,0.6)');
-  // grd.addColorStop(1.0,'rgba(255,255,255,1.0)');
 	ctx.fillStyle = grd;
 	ctx.fillRect(0,0,canvas.width -1 ,canvas.height -1 );
 
@@ -282,12 +266,10 @@ function updateTransferFunction() {
 
 
 
-$(document).on('readyForCanvasRaycaster', function(event) {
-  console.log("readyForCanvasRaycaster");
-  //loadShaders();
+function tfWidgetInit(event) {
 
 
-  $('#tf-holder').tfWidget(function (controlPoints, tfArray) {
+  $('#tf-holder').tfWidget( (controlPoints, tfArray) => {
     var temp = [];
     for(var i = 0; i < controlPoints.length; i++) {
 
@@ -303,9 +285,9 @@ $(document).on('readyForCanvasRaycaster', function(event) {
     controlPointsTF = temp;
     transferTextureIsUpdated = true;
   });
-});
+}
 
-function convertHex(hex,opacity){
+function convertHex(hex,opacity) {
     var hex = hex.replace('#','');
     var r = parseInt(hex.substring(0,2), 16);
     var g = parseInt(hex.substring(2,4), 16);
@@ -315,18 +297,13 @@ function convertHex(hex,opacity){
     return result;
 }
 
-$(document).on('selectedFileReadyForRaycast', function(event) {
-  loadShaders(window.arr);
-
-});
-
-$(document).on('cameraChangeEvent', function(event, cam) {
-  console.log("cameraChangeEvent");
+function updateCamera(cam) {
+  console.log("cameraChange");
   console.log(cam);
   camera.position.x = cam.x || camera.position.x;
   camera.position.y = cam.y || camera.position.y;
   camera.position.z = cam.z || camera.position.z;
   camera.lookAt(new THREE.Vector3(0,0,0));
-});
+};
 
-export default init;
+export default {loadShaders, updateCamera};
