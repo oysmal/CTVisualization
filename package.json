@@ -26,9 +26,23 @@
     "serve-favicon": "~2.3.0"
   },
   "devDependencies": {
+    "babelify": "^6.0.2",
+    "browserify": "^13.0.0",
     "del": "^2.2.0",
+    "eslint": "^2.7.0",
     "gulp": "^3.9.1",
+    "gulp-browserify": "^0.5.1",
+    "gulp-eslint": "^2.0.0",
     "gulp-util": "^3.0.7",
-    "vinyl-paths": "^2.1.0"
+    "node-sass": "^3.4.2",
+    "vinyl-buffer": "^1.0.0",
+    "vinyl-paths": "^2.1.0",
+    "vinyl-source-stream": "^1.1.0",
+    "watchify": "^3.7.0"
+  },
+  "browserify": {
+    "transform": [
+      "babelify"
+    ]
   }
 }
