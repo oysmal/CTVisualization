@@ -1,12 +1,11 @@
 'use strict';
 import {loadShaders, updateCamera} from '../../threejs/raycaster.es6';
-import $ from '../../../bower_components/jquery/dist/jquery.min.js';
 
 var main = () => {
 
   console.log(loadShaders);
 
-  $('#files').on('change', (e) => {
+  document.getElementById('files').addEventListener('change', e => {
     var files = e.target.files;
     console.log("change files");
 
@@ -22,14 +21,15 @@ var main = () => {
       if (evt.target.readyState == FileReader.DONE) { // DONE == 2
         window.arr = new Uint16Array(evt.target.result);
         console.log(loadShaders);
-        loadShaders();  // start rendering
+        loadShaders(window.arr);  // start rendering
       }
     };
 
     reader.readAsArrayBuffer(file);
   }, false);
 
-  $("#update_camera").on("click", () => {
+  document.getElementById('update_camera').addEventListener('click', (e) => {
+    e.preventDefault();
     console.log("updateCam");
     var cam = [];
     cam.push($("#cam_x").val());

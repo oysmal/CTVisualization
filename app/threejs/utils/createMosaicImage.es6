@@ -1,6 +1,18 @@
 
-
 class Mosaic {
+
+	constructor() {
+		this.scaleFactor = 1.0;
+		this.sizez = 1.0;
+	}
+
+	getSizez() {
+		return this.sizez;
+	}
+
+	getScaleFactor() {
+		return this.scaleFactor;
+	}
 
 	createOneImage(sizex, sizey, data, callback) {
 		var canvas = document.createElement("canvas");
@@ -34,22 +46,24 @@ class Mosaic {
 		var sizey = data[1];
 		var sizez = data[2];
 		data = data.slice(2);
-		mosaic.sizez = sizez;
+		this.sizez = sizez;
+
+		console.log(this);
 
 
 		var canvas = document.createElement("canvas");
-		mosaic.scaleFactor = 1.0;
+		this.scaleFactor = 1.0;
 		if (sizex*sizey > 16384) {
-			mosaic.scaleFactor = sizex*sizez/16384.0;
+			this.scaleFactor = sizex*sizez/16384.0;
 		}
-		canvas.setAttribute("width", sizex*sizez/mosaic.scaleFactor);
-		canvas.setAttribute("height", sizey/mosaic.scaleFactor);
+		canvas.setAttribute("width", sizex*sizez/this.scaleFactor);
+		canvas.setAttribute("height", sizey/this.scaleFactor);
 		var ctx = canvas.getContext('2d');
 
 
 		for(var i = 0; i < sizez; i++) {
-			this.createOneImage(sizex, sizey, data.slice(i*sizex*sizey, i*sizex*sizey+sizex*sizey), function(image) {
-				ctx.drawImage(image, sizex*i/mosaic.scaleFactor, 0, sizex/mosaic.scaleFactor, sizey/mosaic.scaleFactor);
+			this.createOneImage(sizex, sizey, data.slice(i*sizex*sizey, i*sizex*sizey+sizex*sizey), (image) => {
+				ctx.drawImage(image, sizex*i/this.scaleFactor, 0, sizex/this.scaleFactor, sizey/this.scaleFactor);
 				console.log("image generation progress: " + Math.floor(i/sizez*100) + " %");
 			});
 		}

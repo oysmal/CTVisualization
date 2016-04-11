@@ -24,6 +24,7 @@ var OPTS = {
     html : 'app/**/*.html',
     stylesheets : 'app/styles/*.{scss,css,sass}',
     javascripts : 'app/**/*.{js,es6}',
+    libs : 'app/lib/*.{js,es6}',
     images : 'app/resources/**/*.{png,gif,jpeg,jpg}',
     shaders : 'app/threejs/shaders/**/*.{vs,fs}',
     root : 'app',
@@ -42,7 +43,7 @@ var OPTS = {
 
 gulp.task('default', ['watch']);
 
-gulp.task('build', ['copyHtml', 'copyImages', 'copyShaders', 'buildStylesheets', 'buildJS', 'bower-files']);
+gulp.task('build', ['copyHtml', 'copyImages', 'copyShaders', 'buildStylesheets', 'buildJS', 'bower-files', 'copyLibs']);
 
 // configure the jshint task
 gulp.task('lint', function() {
@@ -72,6 +73,10 @@ gulp.task('copyImages', function() {
 
 gulp.task('copyShaders', function() {
   return gulp.src(OPTS.src.shaders).pipe(gulp.dest(OPTS.dest.shaders));
+});
+
+gulp.task('copyLibs', function() {
+  return gulp.src(OPTS.src.libs).pipe(gulp.dest(OPTS.dest.bower));
 });
 
 gulp.task('buildStylesheets', function() {

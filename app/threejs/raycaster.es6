@@ -1,6 +1,5 @@
 import Mosaic from './utils/createMosaicImage.es6';
 import THREE from '../../bower_components/three.js/three.js';
-import $ from '../../bower_components/jquery/dist/jquery.min.js';
 
 
 var container;
@@ -25,6 +24,9 @@ var controlPointsTF = [];
 var screenSize = {x: 640, y: 480};
 var windowHalfX = screenSize.x / 2;
 var windowHalfY = screenSize.y / 2;
+
+var sizez;
+
 
 function loadResource(url, callback) {
   $.ajax({
@@ -89,6 +91,8 @@ function init(data) {
 
   mosaic.createMosaicImage(data, function(canvas) {
 
+    sizez = mosaic.getSizez();
+
     cubeTexture = new THREE.Texture(canvas);
     cubeTexture.needsUpdate = true;
     cubeTexture.generateMipmaps = false;
@@ -137,7 +141,7 @@ function init(data) {
         },
   			steps : {
           type: "1f" ,
-          value: mosaic.sizez
+          value: sizez
         },
   			alphaCorrection : {
           type: "1f" ,
@@ -145,12 +149,10 @@ function init(data) {
         },
         maxSteps: {
           type: "1i" ,
-          value: Math.ceil(Math.sqrt(3)*mosaic.sizez)
+          value: Math.ceil(Math.sqrt(3)*sizez)
         }
       }
   	 });
-      Math.ceil(Math.sqrt(3)*mosaic.sizez)
-   	console.log("mosaicz real: " + mosaic.sizez);
 
 
     // Geometry setup
@@ -221,7 +223,7 @@ function render() {
 	renderer.render( sceneFirstPass, camera, rtTexture, true );
 	//Render the second pass and perform the volume rendering.
 	renderer.render( sceneSecondPass, camera );
-	materialSecondPass.uniforms.steps.value = mosaic.sizez;
+	materialSecondPass.uniforms.steps.value = sizez;
 	materialSecondPass.uniforms.alphaCorrection.value = 1.0;
 
 
