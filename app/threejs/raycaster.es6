@@ -1,3 +1,6 @@
+import Mosaic from './utils/createMosaicImage.es6';
+import THREE from '../../bower_components/three.js/three.js';
+
 
 var container;
 
@@ -21,6 +24,9 @@ var controlPointsTF = [];
 var screenSize = {x: 640, y: 480};
 var windowHalfX = screenSize.x / 2;
 var windowHalfY = screenSize.y / 2;
+
+var sizez;
+
 
 function loadResource(url, callback) {
   $.ajax({
@@ -70,6 +76,7 @@ function loadShaders(arr) {
 function init(data) {
 
   container = $('#main');
+  tfWidgetInit();
 
   camera = new THREE.PerspectiveCamera( 60, screenSize.x/screenSize.y, 0.1, 100000 );
   camera.position.x = 0;
@@ -80,7 +87,11 @@ function init(data) {
   sceneFirstPass = new THREE.Scene();
 	sceneSecondPass = new THREE.Scene();
 
+  var mosaic = new Mosaic();
+
   mosaic.createMosaicImage(data, function(canvas) {
+
+    sizez = mosaic.getSizez();
 
     cubeTexture = new THREE.Texture(canvas);
     cubeTexture.needsUpdate = true;
@@ -130,7 +141,7 @@ function init(data) {
         },
   			steps : {
           type: "1f" ,
-          value: mosaic.sizez
+          value: sizez
         },
   			alphaCorrection : {
           type: "1f" ,
@@ -138,12 +149,10 @@ function init(data) {
         },
         maxSteps: {
           type: "1i" ,
-          value: Math.ceil(Math.sqrt(3)*mosaic.sizez)
+          value: Math.ceil(Math.sqrt(3)*sizez)
         }
       }
   	 });
-      Math.ceil(Math.sqrt(3)*mosaic.sizez)
-   	console.log("mosaicz real: " + mosaic.sizez);
 
 
     // Geometry setup
@@ -214,7 +223,7 @@ function render() {
 	renderer.render( sceneFirstPass, camera, rtTexture, true );
 	//Render the second pass and perform the volume rendering.
 	renderer.render( sceneSecondPass, camera );
-	materialSecondPass.uniforms.steps.value = mosaic.sizez;
+	materialSecondPass.uniforms.steps.value = sizez;
 	materialSecondPass.uniforms.alphaCorrection.value = 1.0;
 
 
@@ -242,24 +251,7 @@ function updateTransferFunction() {
     grd.addColorStop(controlPointsTF[i].index,
       controlPointsTF[i].rgba);
   }
-  
-  // grd.addColorStop(0.1,'rgba(255,255,255,0.0)');
-  // grd.addColorStop(0.2,'rgba(255,0,0,0.0)');
-  // grd.addColorStop(0.45,'rgba(255,64,35,0.1)');
-  // grd.addColorStop(0.65,'rgba(0,0,255,0.4)');
-  // grd.addColorStop(0.75,'rgba(0,255,0,0.7)');
-  // grd.addColorStop(1.0,'rgba(255,255,0,0.9)');
 
-
-  // grd.addColorStop(0.0,'rgba(0,0,0,0.0)');
-  // grd.addColorStop(0.1,'rgba(0,0,0,0.0)');
-  // grd.addColorStop(0.25,'rgba(255,195,170,0.05)');
-  // grd.addColorStop(0.35,'rgba(155,0,0,0.05)');
-  // grd.addColorStop(0.45,'rgba(155,0,0,0.1)');
-  // grd.addColorStop(0.5,'rgba(255,0,0,0.1)');
-  // grd.addColorStop(0.55,'rgba(200,200,200,0.5)');
-  // grd.addColorStop(0.7,'rgba(255,255,255,0.6)');
-  // grd.addColorStop(1.0,'rgba(255,255,255,1.0)');
 	ctx.fillStyle = grd;
 	ctx.fillRect(0,0,canvas.width -1 ,canvas.height -1 );
 
@@ -276,19 +268,17 @@ function updateTransferFunction() {
 
 
 
-$(document).on('readyForCanvasRaycaster', function(event) {
-  console.log("readyForCanvasRaycaster");
-  //loadShaders();
+function tfWidgetInit(event) {
 
-  
-  $('#tf-holder').tfWidget(function (controlPoints, tfArray) {
+
+  $('#tf-holder').tfWidget( (controlPoints, tfArray) => {
     var temp = [];
     for(var i = 0; i < controlPoints.length; i++) {
-      
+
       //var rgb = controlPoints[i].rgb;
       //rgb = rgb.replace(/[^\d,]/g, '').split(',');
       //var alpha = controlPoints[i].alpha;
-      
+
       temp[i] = controlPoints[i];
       temp[i].index = controlPoints[i].index;
       //temp[i].rgba = 'rgba('+rgb[0]+','+rgb[1]+','+rgb[2]+','+alpha+')';
@@ -297,9 +287,9 @@ $(document).on('readyForCanvasRaycaster', function(event) {
     controlPointsTF = temp;
     transferTextureIsUpdated = true;
   });
-});
+}
 
-function convertHex(hex,opacity){
+function convertHex(hex,opacity) {
     var hex = hex.replace('#','');
     var r = parseInt(hex.substring(0,2), 16);
     var g = parseInt(hex.substring(2,4), 16);
@@ -309,16 +299,13 @@ function convertHex(hex,opacity){
     return result;
 }
 
-$(document).on('selectedFileReadyForRaycast', function(event) {
-  loadShaders(window.arr);
-
-});
-
-$(document).on('cameraChangeEvent', function(event, cam) {
-  console.log("cameraChangeEvent");
+function updateCamera(cam) {
+  console.log("cameraChange");
   console.log(cam);
   camera.position.x = cam.x || camera.position.x;
   camera.position.y = cam.y || camera.position.y;
   camera.position.z = cam.z || camera.position.z;
   camera.lookAt(new THREE.Vector3(0,0,0));
-});
+};
+
+export default {loadShaders, updateCamera};

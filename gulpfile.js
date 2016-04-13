@@ -3,7 +3,7 @@
 // grab our gulp packages
 var gulp  = require('gulp'),
 gutil = require('gulp-util'),
-jshint = require('gulp-jshint'),
+eslint = require('gulp-eslint'),
 sass = require('gulp-sass'),
 sourcemaps = require('gulp-sourcemaps'),
 uglify = require('gulp-uglify'),
@@ -11,17 +11,24 @@ ngAnnotate = require('gulp-ng-annotate'),
 concat = require('gulp-concat'),
 del = require('del'),
 bower = require('gulp-bower'),
-mainBowerFiles = require('main-bower-files');
+mainBowerFiles = require('main-bower-files'),
+source = require('vinyl-source-stream'),
+buffer = require('vinyl-buffer'),
+browserify = require('browserify'),
+babelify = require('babelify'),
+fs = require("fs");
 
 
 var OPTS = {
   src: {
     html : 'app/**/*.html',
     stylesheets : 'app/styles/*.{scss,css,sass}',
-    javascripts : 'app/**/*.js',
+    javascripts : 'app/**/*.{js,es6}',
+    libs : 'app/lib/*.{js,es6}',
     images : 'app/resources/**/*.{png,gif,jpeg,jpg}',
     shaders : 'app/threejs/shaders/**/*.{vs,fs}',
-    root : 'app'
+    root : 'app',
+    entryPoint : 'app/app.es6'
   },
   dest: {
     html : 'public',
@@ -34,23 +41,21 @@ var OPTS = {
   }
 };
 
-// create a default task and just log a message
-gulp.task('default', ['watch'] , function() {
-  return gutil.log('Gulp is running!')
-});
+gulp.task('default', ['watch']);
 
-gulp.task('build', ['copyHtml', 'copyImages', 'copyShaders', 'buildStylesheets', 'buildJS', 'bower-files']);
+gulp.task('build', ['copyHtml', 'copyImages', 'copyShaders', 'buildStylesheets', 'buildJS', 'bower-files', 'copyLibs']);
 
 // configure the jshint task
-gulp.task('jshint', function() {
+gulp.task('lint', function() {
   return gulp.src(OPTS.src.javascripts)
-  .pipe(jshint())
-  .pipe(jshint.reporter('jshint-stylish'));
+  .pipe(eslint())
+  .pipe(eslint.format())
+  .pipe(eslint.failAfterError());
 });
 
 // configure which files to watch and what tasks to use on file changes
 gulp.task('watch', function() {
-  gulp.watch(OPTS.src.root, ['jshint']);
+  gulp.watch(OPTS.src.javascripts, ['lint', 'buildJS']);
   gulp.watch(OPTS.src.stylesheets, ['buildStylesheets']);
 });
 
@@ -70,22 +75,23 @@ gulp.task('copyShaders', function() {
   return gulp.src(OPTS.src.shaders).pipe(gulp.dest(OPTS.dest.shaders));
 });
 
+gulp.task('copyLibs', function() {
+  return gulp.src(OPTS.src.libs).pipe(gulp.dest(OPTS.dest.bower));
+});
+
 gulp.task('buildStylesheets', function() {
   return gulp.src(OPTS.src.stylesheets)
-  .pipe(sourcemaps.init())  // Process the original sources
-//  .pipe(sass())
-  .pipe(sourcemaps.write())  // Process the original sources
+  .pipe(sass())
   .pipe(gulp.dest(OPTS.dest.stylesheets));
 });
 
 gulp.task('buildJS', function() {
-  return gulp.src(OPTS.src.javascripts)
-  .pipe(sourcemaps.init())
-  .pipe(concat(OPTS.dest.bundleName))
-  //only uglify if gulp is ran with '--type production'
-  .pipe(ngAnnotate())
-  .pipe(gutil.env.type === 'production' ? uglify() : gutil.noop())
-  .pipe(sourcemaps.write())
+  browserify({debug: true })
+  .transform(babelify, {extensions: ['.es6']})
+  .require(OPTS.src.entryPoint, {entry: true})
+  .bundle()
+  .on('error',gutil.log)
+  .pipe(source('bundle.js'))
   .pipe(gulp.dest(OPTS.dest.root));
 });
 

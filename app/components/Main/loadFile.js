@@ -1,9 +1,9 @@
-
 'use strict';
+import raycaster from '../../threejs/raycaster.js';
+import $ from '../../../bower_components/jquery/dist/jquery.min.js';
 
-var main = angular.module('ctMain', []);
+var main = function() {
 
-main.controller('MainController', ['$scope', function($scope) {
   $(document).trigger('readyForCanvasRaycaster');
   $(document).trigger('readyForCanvas');
 
@@ -28,9 +28,17 @@ main.controller('MainController', ['$scope', function($scope) {
     reader.readAsArrayBuffer(file);
   }, false);
 
-  $scope.onChangeCamera = function() {
+  $("#update_camera").on("click", function() {
     console.log("trigger");
-    console.log($scope.camera);
-    $(document).trigger("cameraChangeEvent", $scope.camera);
-  }
-}]);
+    var cam = [];
+    cam.push($("#cam_x").val());
+    cam.push($("#cam_y").val());
+    cam.push($("#cam_z").val());
+    $(document).trigger("cameraChangeEvent", cam);
+  });
+};
+
+export default function()  {
+  //$("#main").addEventListener('load', function() {main();});
+  console.log("Hi");
+};
