@@ -1,3 +1,5 @@
+
+window.onload = function(){ 
 ( function( window ) {
 
 'use strict';
@@ -42,3 +44,4 @@ showBottom.onclick = function() {
   action.toggle( menuBottom, 'menu-open' );
         //disableOther( 'showBottom' );
       };
+    }
