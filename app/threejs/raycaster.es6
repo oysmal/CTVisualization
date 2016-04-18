@@ -1,9 +1,8 @@
 import Mosaic from './utils/createMosaicImage.es6';
-import THREE from '../../bower_components/three.js/three.js';
-
 
 let container;
 
+let controls;
 let camera, sceneFirstPass, sceneSecondPass, renderer;
 let rtTexture;
 let cubeTexture;
@@ -164,12 +163,18 @@ function init(data) {
   	sceneSecondPass.add( meshSecondPass );
 
 
-    renderer = new THREE.WebGLRenderer();
+    renderer = new THREE.WebGLRenderer({canvas: document.getElementById('appCanvas')});
     renderer.setPixelRatio( window.devicePixelRatio );
     renderer.setSize( screenSize.x, screenSize.y );
     renderer.autoClear = true;
     renderer.setClearColor("#000000");
-    renderer.domElement.setAttribute('id', 'canvas');
+
+    // set up controls
+    controls = new THREE.OrbitControls( camera, renderer.domElement );
+  				controls.enableDamping = true;
+  				controls.dampingFactor = 0.25;
+  				controls.enableZoom = true;
+
     container.append( renderer.domElement );
 
     let b = new THREE.BoxGeometry(2,2,2);
@@ -179,8 +184,6 @@ function init(data) {
     bmesh.position.x = 0;
     bmesh.position.y = 0;
     bmesh.position.z = 0;
-
-    //sceneSecondPass.add(bmesh);
 
     window.addEventListener( 'resize', onWindowResize, false );
 
@@ -205,6 +208,8 @@ function animate() {
 
   requestAnimationFrame( animate );
 
+  controls.update();
+
   render();
 
 }
@@ -216,7 +221,7 @@ function render() {
     updateTextures();
     transferTextureIsUpdated = false;
   }
-  //let delta = clock.getDelta();
+  
 	//Render first pass and store the world space coords of the back face fragments into the texture.
 	renderer.render( sceneFirstPass, camera, rtTexture, true );
 	//Render the second pass and perform the volume rendering.

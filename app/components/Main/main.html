@@ -1,15 +1,11 @@
 <div id="main">
-  <form class="form-control form">
-    <label>camera position x: <input class="form-control input" type="text" id="cam_x"></input></label>
-    <label>camera position y: <input class="form-control input" type="text" id="cam_y"></input></label>
-    <label>camera position z: <input class="form-control input" type="text" id="cam_z"></input></label>
-    <button class="btn btn-primary" id="update_camera">Update camera pos</button>
-    <img id="transferTexture" alt="transferfunc"></img>
-    <div id="tf-holder"></div>
+  <img id="transferTexture" alt="transferfunc"></img>
+  <div id="tf-holder"></div>
 
-    <input type="file" id="files" name="files[]" multiple />
-    <output id="list"></output>
-    <p id="byte"></p>
-  </form>
+  <input type="file" id="files" name="files[]" multiple />
+  <output id="list"></output>
+  <p id="byte"></p>
+
+  <canvas id="appCanvas"></canvas>
 
 </div>
