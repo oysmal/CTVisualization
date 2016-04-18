@@ -2,30 +2,30 @@ import Mosaic from './utils/createMosaicImage.es6';
 import THREE from '../../bower_components/three.js/three.js';
 
 
-var container;
+let container;
 
-var camera, sceneFirstPass, sceneSecondPass, renderer;
-var rtTexture;
-var cubeTexture;
-var transferTexture;
+let camera, sceneFirstPass, sceneSecondPass, renderer;
+let rtTexture;
+let cubeTexture;
+let transferTexture;
 
-var materialFirstPass, materialSecondPass;
+let materialFirstPass, materialSecondPass;
 
-var mesh, geometry;
-var spheres = [];
+let mesh, geometry;
+let spheres = [];
 
-var vertexShader1, fragmentShader1;
-var vertexShader2, fragmentShader2;
-var transferTextureIsUpdated = false;
+let vertexShader1, fragmentShader1;
+let vertexShader2, fragmentShader2;
+let transferTextureIsUpdated = false;
 
-var grd, canvas, ctx;
-var controlPointsTF = [];
+let grd, canvas, ctx;
+let controlPointsTF = [];
 
-var screenSize = {x: 640, y: 480};
-var windowHalfX = screenSize.x / 2;
-var windowHalfY = screenSize.y / 2;
+let screenSize = {x: 640, y: 480};
+let windowHalfX = screenSize.x / 2;
+let windowHalfY = screenSize.y / 2;
 
-var sizez;
+let sizez;
 
 
 function loadResource(url, callback) {
@@ -60,7 +60,7 @@ function loadShaders(arr) {
         }
         vertexShader2 = data;
 
-        loadResource('/assets/shaders/raycaster.secondpass.hand.fs', function(err, data) {
+        loadResource('/assets/shaders/raycaster.secondpass.fs', function(err, data) {
           if(err) {
             console.log(err);
           }
@@ -87,7 +87,7 @@ function init(data) {
   sceneFirstPass = new THREE.Scene();
 	sceneSecondPass = new THREE.Scene();
 
-  var mosaic = new Mosaic();
+  let mosaic = new Mosaic();
 
   mosaic.createMosaicImage(data, function(canvas) {
 
@@ -156,10 +156,10 @@ function init(data) {
 
 
     // Geometry setup
-  	var boxGeometry = new THREE.BoxGeometry(1.0, 1.0, 1.0);
+  	let boxGeometry = new THREE.BoxGeometry(1.0, 1.0, 1.0);
   	boxGeometry.doubleSided = true;
-  	var meshFirstPass = new THREE.Mesh( boxGeometry, materialFirstPass );
-  	var meshSecondPass = new THREE.Mesh( boxGeometry, materialSecondPass );
+  	let meshFirstPass = new THREE.Mesh( boxGeometry, materialFirstPass );
+  	let meshSecondPass = new THREE.Mesh( boxGeometry, materialSecondPass );
   	sceneFirstPass.add( meshFirstPass );
   	sceneSecondPass.add( meshSecondPass );
 
@@ -169,15 +169,13 @@ function init(data) {
     renderer.setSize( screenSize.x, screenSize.y );
     renderer.autoClear = true;
     renderer.setClearColor("#000000");
-    console.log("clear color: ");
-    console.log(renderer.getClearColor());
     renderer.domElement.setAttribute('id', 'canvas');
     container.append( renderer.domElement );
 
-    var b = new THREE.BoxGeometry(2,2,2);
-    var bmat = new THREE.MeshBasicMaterial({color: "#FF0000"});
+    let b = new THREE.BoxGeometry(2,2,2);
+    let bmat = new THREE.MeshBasicMaterial({color: "#FF0000"});
 
-    var bmesh = new THREE.Mesh(b, bmat);
+    let bmesh = new THREE.Mesh(b, bmat);
     bmesh.position.x = 0;
     bmesh.position.y = 0;
     bmesh.position.z = 0;
@@ -218,7 +216,7 @@ function render() {
     updateTextures();
     transferTextureIsUpdated = false;
   }
-  //var delta = clock.getDelta();
+  //let delta = clock.getDelta();
 	//Render first pass and store the world space coords of the back face fragments into the texture.
 	renderer.render( sceneFirstPass, camera, rtTexture, true );
 	//Render the second pass and perform the volume rendering.
@@ -247,7 +245,7 @@ function updateTransferFunction() {
 
   grd = ctx.createLinearGradient(0, 0, canvas.width -1 , canvas.height - 1);
 
-  for (var i = 0; i < controlPointsTF.length; i++) {
+  for (let i = 0; i < controlPointsTF.length; i++) {
     grd.addColorStop(controlPointsTF[i].index,
       controlPointsTF[i].rgba);
   }
@@ -255,7 +253,7 @@ function updateTransferFunction() {
 	ctx.fillStyle = grd;
 	ctx.fillRect(0,0,canvas.width -1 ,canvas.height -1 );
 
-  var img = document.getElementById("transferTexture");
+  let img = document.getElementById("transferTexture");
 				img.src = canvas.toDataURL();
 				img.style.width = "256 px";
 				img.style.height = "20 px";
@@ -272,12 +270,12 @@ function tfWidgetInit(event) {
 
 
   $('#tf-holder').tfWidget( (controlPoints, tfArray) => {
-    var temp = [];
-    for(var i = 0; i < controlPoints.length; i++) {
+    let temp = [];
+    for(let i = 0; i < controlPoints.length; i++) {
 
-      //var rgb = controlPoints[i].rgb;
+      //let rgb = controlPoints[i].rgb;
       //rgb = rgb.replace(/[^\d,]/g, '').split(',');
-      //var alpha = controlPoints[i].alpha;
+      //let alpha = controlPoints[i].alpha;
 
       temp[i] = controlPoints[i];
       temp[i].index = controlPoints[i].index;
@@ -289,22 +287,20 @@ function tfWidgetInit(event) {
   });
 }
 
-function convertHex(hex,opacity) {
-    var hex = hex.replace('#','');
-    var r = parseInt(hex.substring(0,2), 16);
-    var g = parseInt(hex.substring(2,4), 16);
-    var b = parseInt(hex.substring(4,6), 16);
+function convertHex(_hex, opacity) {
+    let hex = _hex.replace('#','');
+    let r = parseInt(hex.substring(0,2), 16);
+    let g = parseInt(hex.substring(2,4), 16);
+    let b = parseInt(hex.substring(4,6), 16);
 
-    var result = 'rgba('+r+','+g+','+b+','+opacity+')';
+    let result = 'rgba('+r+','+g+','+b+','+opacity+')';
     return result;
 }
 
 function updateCamera(cam) {
-  console.log("cameraChange");
-  console.log(cam);
-  camera.position.x = cam.x || camera.position.x;
-  camera.position.y = cam.y || camera.position.y;
-  camera.position.z = cam.z || camera.position.z;
+  camera.position.x = cam.x || 0;
+  camera.position.y = cam.y || 0;
+  camera.position.z = cam.z || 0;
   camera.lookAt(new THREE.Vector3(0,0,0));
 };
 

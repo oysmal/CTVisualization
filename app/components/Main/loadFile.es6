@@ -31,10 +31,10 @@ var main = () => {
   document.getElementById('update_camera').addEventListener('click', (e) => {
     e.preventDefault();
     console.log("updateCam");
-    var cam = [];
-    cam.push($("#cam_x").val());
-    cam.push($("#cam_y").val());
-    cam.push($("#cam_z").val());
+    var cam = {};
+    cam.x = $("#cam_x").val();
+    cam.y = $("#cam_y").val();
+    cam.z = $("#cam_z").val();
     updateCamera(cam);
   });
 };

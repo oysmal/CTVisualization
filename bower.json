@@ -9,12 +9,12 @@
   "keywords": [
     "threejs",
     "svalbard",
-    "angular"
+    "jQuery"
   ],
   "moduleType": [
-    "amd"
+    "commonJS"
   ],
-  "homepage": "",
+  "homepage": "ct.siggi.no",
   "private": true,
   "ignore": [
     "**/.*",
@@ -24,9 +24,7 @@
     "tests"
   ],
   "dependencies": {
-    "angular": "^1.5.0",
     "bootstrap": "^3.3.6",
-    "angular-route": "^1.5.0",
     "three.js": "^0.74.0",
     "d3": "^3.5.16"
   }
