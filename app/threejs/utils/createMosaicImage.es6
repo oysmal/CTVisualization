@@ -62,10 +62,13 @@ class Mosaic {
 
 
 		for(var i = 0; i < sizez; i++) {
-			this.createOneImage(sizex, sizey, data.slice(i*sizex*sizey, i*sizex*sizey+sizex*sizey), (image) => {
-				ctx.drawImage(image, sizex*i/this.scaleFactor, 0, sizex/this.scaleFactor, sizey/this.scaleFactor);
-				console.log("image generation progress: " + Math.floor(i/sizez*100) + " %");
-			});
+				this.createOneImage(sizex, sizey, data.slice(i*sizex*sizey, i*sizex*sizey+sizex*sizey), (image) => {
+					ctx.drawImage(image, sizex*i/this.scaleFactor, 0, sizex/this.scaleFactor, sizey/this.scaleFactor);
+					var currentProgress = Math.floor(i/sizez*100) + "%";
+					console.log("image generation progress: " + currentProgress);
+					$("#progressBar").css("width", currentProgress);
+					$("#progressBar").text(currentProgress);
+				});
 		}
 
 		console.log("data");
