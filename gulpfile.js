@@ -43,7 +43,7 @@ var OPTS = {
 
 gulp.task('default', ['watch']);
 
-gulp.task('build', ['copyHtml', 'copyImages', 'copyShaders', 'buildStylesheets', 'buildJS', 'bower-files', 'copyLibs']);
+gulp.task('build', ['copyHtml', 'copyImages', 'copyShaders', 'copy-bootstrap', 'buildStylesheets', 'buildJS', 'bower-files', 'copyLibs']);
 
 // configure the jshint task
 gulp.task('lint', function() {
@@ -95,9 +95,14 @@ gulp.task('buildJS', function() {
   .pipe(gulp.dest(OPTS.dest.root));
 });
 
-gulp.task("bower-files", function(){
+gulp.task("bower-files", function() {
     return gulp.src(mainBowerFiles())
     .pipe(gulp.dest(OPTS.dest.bower));
+});
+
+gulp.task("copy-bootstrap", function() {
+  return gulp.src("bower_components/bootstrap/dist/css/bootstrap.css")
+  .pipe(gulp.dest(OPTS.dest.bower));
 });
 
 gulp.task('clean:public', function () {

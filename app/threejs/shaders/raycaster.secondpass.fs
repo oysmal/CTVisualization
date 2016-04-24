@@ -11,7 +11,7 @@ uniform int maxSteps;
 // The maximum number of steps we take to travel a distance of 1 is 512.
 // ceil( sqrt(3) * 512 ) = 887
 // This prevents the back of the image from getting cut off when steps=512 & viewing diagonally.
-const int MAX_STEPS_RAYCASTER = 1000;
+const int MAX_STEPS_RAYCASTER = 4096;
 
 //Acts like a texture3D using Z slices and trilinear filtering.
 vec4 sampleAs3DTexture( vec3 texCoord ) {
@@ -64,11 +64,14 @@ vec4 sampleAs3DTexture( vec3 texCoord ) {
   //out1.a = 1.0;//colorSlice1.a;
   //out2.a = 1.0;//colorSlice2.a;
 
+
+
+  float proximityToZSlice1 = texCoord.z*steps/zSliceNumber2;
+
   //How distant is zSlice1 to ZSlice2. Used to interpolate between one Z slice and the other.
-  float zDifference = mod(texCoord.z * steps, 1.0);
 
   //Finally interpolate between the two intermediate colors of each Z slice.
-  return mix(out1, out2, zDifference);
+  return mix(out1, out2, (1.0-proximityToZSlice1));
 }
 
 void main( void ) {
@@ -89,7 +92,7 @@ void main( void ) {
   float rayLength = length(dir);
 
   //Calculate how long to increment in each step.
-  float delta = 1.0 / steps;
+  float delta = 1.0 / 4096.0;//steps;
 
   //The increment in each direction for each step.
   vec3 deltaDirection = normalize(dir) * delta;
@@ -109,7 +112,7 @@ void main( void ) {
 
   //If we have twice as many samples, we only need ~1/2 the alpha per sample.
   //Scaling by 256/10 just happens to give a good value for the alphaCorrection slider.
-  float alphaScaleFactor = 25.6 * delta;
+  float alphaScaleFactor = 4096.0 * delta;
 
   vec4 colorSample;
   float alphaSample;
@@ -117,8 +120,8 @@ void main( void ) {
   //Perform the ray marching iterations
   for(int i = 0; i < MAX_STEPS_RAYCASTER; i++) {
 
-    if(i >= maxSteps)
-      break;
+    //if(i >= maxSteps)
+    //  break;
 
     //Get the voxel intensity value from the 3D texture.
     colorSample = sampleAs3DTexture( currentPosition );
