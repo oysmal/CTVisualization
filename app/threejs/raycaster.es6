@@ -140,6 +140,10 @@ function init(data) {
         },
   			steps : {
           type: "1f" ,
+          value: 1024.0
+        },
+  			numSlices : {
+          type: "1f" ,
           value: sizez
         },
   			alphaCorrection : {
@@ -148,7 +152,7 @@ function init(data) {
         },
         maxSteps: {
           type: "1i" ,
-          value: Math.ceil(Math.sqrt(3)*sizez)
+          value: Math.ceil(Math.sqrt(3)*1024.0)
         }
       }
   	 });
