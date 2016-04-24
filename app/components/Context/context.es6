@@ -6,6 +6,8 @@ class Context {
          return instance;
       }
       this.props = {};
+      instance = this;
+      return instance;
   }
 
   setProp(name, prop) {
