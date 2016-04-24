@@ -1,4 +1,5 @@
 'use strict';
+/*Code forked and modified from a d3 example found at http://bl.ocks.org/Caged/6476579*/
 import {loadShaders, updateCamera} from '../../threejs/raycaster.es6';
 
 var main = () => {
