@@ -2,6 +2,7 @@
 class Mosaic {
 
 	constructor() {
+		this.currentProgress;
 		this.scaleFactor = 1.0;
 		this.sizez = 1.0;
 	}
@@ -60,23 +61,41 @@ class Mosaic {
 		canvas.setAttribute("height", sizey/this.scaleFactor);
 		var ctx = canvas.getContext('2d');
 
+		let i = 0;
+		var that = this;
 
-		for(var i = 0; i < sizez; i++) {
-				this.createOneImage(sizex, sizey, data.slice(i*sizex*sizey, i*sizex*sizey+sizex*sizey), (image) => {
-					ctx.drawImage(image, sizex*i/this.scaleFactor, 0, sizex/this.scaleFactor, sizey/this.scaleFactor);
-					var currentProgress = Math.floor(i/sizez*100) + "%";
-					console.log("image generation progress: " + currentProgress);
-					$("#progressBar").css("width", currentProgress);
-					$("#progressBar").text(currentProgress);
-				});
+		(function createImages() {
+			that.updateAndPostProgress(i, false);
+			that.createOneImage(sizex, sizey, data.slice(i*sizex*sizey, i*sizex*sizey+sizex*sizey), (image) => {
+				ctx.drawImage(image, sizex*i/that.scaleFactor, 0, sizex/that.scaleFactor, sizey/that.scaleFactor);
+			});
+			
+			i++;
+			if (i < sizez) {
+				setTimeout(createImages, 0);
+			} else {
+				that.updateAndPostProgress(100, true);
+
+				console.log("data");
+				console.log(data);
+				console.log(data[0]);
+				console.log("sizes: " + sizex + ", " + sizey + ", " + sizez);
+
+				callback(canvas);
+			}
+		})();
+	}
+
+	updateAndPostProgress(currentZ, isLastFrame) {
+		if (!isLastFrame) {
+			this.currentProgress = Math.floor(currentZ/this.sizez*100) + "%";
+		} else {
+			this.currentProgress = "100%";
 		}
-
-		console.log("data");
-		console.log(data);
-		console.log(data[0]);
-		console.log("sizes: " + sizex + ", " + sizey + ", " + sizez);
-
-		callback(canvas);
+		console.log("image generation progress: " + this.currentProgress);
+		$("#progressBar").css("width", this.currentProgress);
+		$("#progressBar").text(this.currentProgress);
+		
 	}
 }
 
