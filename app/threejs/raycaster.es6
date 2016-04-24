@@ -140,15 +140,19 @@ function init(data) {
         },
   			steps : {
           type: "1f" ,
+          value: 1024.0
+        },
+  			numSlices : {
+          type: "1f" ,
           value: sizez
         },
   			alphaCorrection : {
           type: "1f" ,
-          value: 1.0
+          value: 0.5
         },
         maxSteps: {
           type: "1i" ,
-          value: Math.ceil(Math.sqrt(3)*sizez)
+          value: Math.ceil(Math.sqrt(3)*1024.0)
         }
       }
   	 });
@@ -221,7 +225,7 @@ function render() {
     updateTextures();
     transferTextureIsUpdated = false;
   }
-  
+
 	//Render first pass and store the world space coords of the back face fragments into the texture.
 	renderer.render( sceneFirstPass, camera, rtTexture, true );
 	//Render the second pass and perform the volume rendering.

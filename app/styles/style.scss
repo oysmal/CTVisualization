@@ -4,6 +4,14 @@ p {
   font-color: $testColor;
 }
 
+#progressBarParent {
+	width: 60%;
+}
+
+#progressBar {
+	 width: 0%;
+	 min-width: 2em;
+}
 
 .form {
   margin: 1em;
