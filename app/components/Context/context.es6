@@ -1,27 +1,9 @@
 let instance = null;
+let props = {
+  image_arrays: {},
+  files: {}
+};
 
-class Context {
-  constructor() {
-      if (instance) {
-         return instance;
-      }
-      this.props = {};
-      instance = this;
-      return instance;
-  }
-
-  setProp(name, prop) {
-    this.props[name] = prop;
-  }
-
-  getProp(name) {
-    return this.props[name] || null;
-  }
-
-  getProps() {
-    return this.props;
-  }
-}
-
-
-export default Context;
+export default function() {
+    return props;
+};
