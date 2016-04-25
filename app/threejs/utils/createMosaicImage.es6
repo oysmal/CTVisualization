@@ -1,3 +1,4 @@
+import context from '../../components/Context/context.es6';
 
 class Mosaic {
 
@@ -41,16 +42,15 @@ class Mosaic {
 		callback(image);
 	}
 
-	createMosaicImage(data, callback) {
-
+	createMosaicImage(name, data, callback) {
 		var sizex = data[0];
 		var sizey = data[1];
 		var sizez = data[2];
+	  let props = context();
+	  console.log(props);
+		props.files[name].sizez = sizez;
 		data = data.slice(2);
 		this.sizez = sizez;
-
-		console.log(this);
-
 
 		var canvas = document.createElement("canvas");
 		this.scaleFactor = 1.0;
@@ -67,9 +67,10 @@ class Mosaic {
 		(function createImages() {
 			that.updateAndPostProgress(i, false);
 			that.createOneImage(sizex, sizey, data.slice(i*sizex*sizey, i*sizex*sizey+sizex*sizey), (image) => {
+				props.image_arrays[name].push(image);
 				ctx.drawImage(image, sizex*i/that.scaleFactor, 0, sizex/that.scaleFactor, sizey/that.scaleFactor);
 			});
-			
+
 			i++;
 			if (i < sizez) {
 				setTimeout(createImages, 0);
@@ -80,7 +81,6 @@ class Mosaic {
 				console.log(data);
 				console.log(data[0]);
 				console.log("sizes: " + sizex + ", " + sizey + ", " + sizez);
-
 				callback(canvas);
 			}
 		})();
@@ -92,10 +92,9 @@ class Mosaic {
 		} else {
 			this.currentProgress = "100%";
 		}
-		console.log("image generation progress: " + this.currentProgress);
 		$("#progressBar").css("width", this.currentProgress);
 		$("#progressBar").text(this.currentProgress);
-		
+
 	}
 }
 
