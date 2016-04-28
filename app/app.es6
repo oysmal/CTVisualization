@@ -58,20 +58,22 @@ function setNavigation() {
   $('#histogram-nav').on('click', () => {
     if(active != 2) {
       $('.main_container').empty();
-      $('.main_container').load('components/test.html', () => {
-
+      $('.main_container').load('components/histogram/histogram.html', () => {
+        	histogram();
       });
       active = 2;  // set this as active
     }
   });
+
+  // navigate to coverflow x-ray. Replace all html in main_container
+  // id for coverflow is 3
+  $('#coverflow-nav').on('click', () => {
+    if(active != 3) {
+      $('.main_container').empty();
+      $('.main_container').load('components/coverflow/coverflow.html', () => {
+        coverflow();
+      });
+      active = 3;
+    }
+  });
 }
-
-//load histogram
-$('.histogram_container').load('components/histogram/histogram.html',() =>{
-	histogram();
-});
-
-//load xray coverflow
-$('.coverflow_container').load('components/coverflow/coverflow.html',()=>{
-	coverflow();
-});
