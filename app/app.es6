@@ -66,14 +66,12 @@ function setNavigation() {
   });
 }
 
-  //load histogram
-  $('.histogram_container').load('components/histogram/histogram.html',() =>{
-  	histogram();
-  });
+//load histogram
+$('.histogram_container').load('components/histogram/histogram.html',() =>{
+	histogram();
+});
 
-  //load xray coverflow
-  $('.coverflow_container').load('components/coverflow/coverflow.html',()=>{
-  	coverflow();
-  })
-
-};
+//load xray coverflow
+$('.coverflow_container').load('components/coverflow/coverflow.html',()=>{
+	coverflow();
+});
