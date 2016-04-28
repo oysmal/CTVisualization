@@ -5,7 +5,7 @@ let container;
 let controls;
 let camera, sceneFirstPass, sceneSecondPass, renderer;
 let rtTexture;
-let tex;
+let cubeTexture;
 let transferTexture;
 
 let materialFirstPass, materialSecondPass;
@@ -76,7 +76,6 @@ function init(name) {
 
   container = $('#main');
   let props = context();
-  console.log(props);
   tfWidgetInit();
 
   camera = new THREE.PerspectiveCamera( 60, screenSize.x/screenSize.y, 0.1, 100000 );
@@ -89,27 +88,13 @@ function init(name) {
   sceneSecondPass = new THREE.Scene();
 
   // create Texture
-  console.log("NAME: " + name);
-  let tex = props.files[name].tex;
-  console.log("is tex: " + (tex != null && tex != undefined));
+  cubeTexture = props.files[name].tex;
   sizez = props.files[name].sizez;
-  console.log("tex " + name + ": ");
-  console.log(tex);
-  tex.needsUpdate = true;
-  tex.generateMipmaps = false;
-  tex.minFilter = THREE.LinearFilter;
-  tex.magFilter = THREE.LinearFilter;
 
-  let geometry = new THREE.BoxBufferGeometry( 1, 1, 1 );
-	let material = new THREE.MeshBasicMaterial( { map: tex } );
-  let mesh = new THREE.Mesh( geometry, material );
-  mesh.position.x = 1;
-	sceneSecondPass.add( mesh );
-
-
-  console.log("tex: ");
-  console.log(tex);
-  //container.append(tex.image);
+  cubeTexture.needsUpdate = true;
+  cubeTexture.generateMipmaps = false;
+  cubeTexture.minFilter = THREE.LinearFilter;
+  cubeTexture.magFilter = THREE.LinearFilter;
 
   readyGradientForTransferfunction();
   transferTexture = updateTransferFunction();
@@ -142,7 +127,7 @@ function init(name) {
           cubeTex:
           {
             type: "t",
-            value: tex
+            value: cubeTexture
           },
           transferTex:
           {
@@ -182,7 +167,7 @@ function init(name) {
       renderer.setPixelRatio( window.devicePixelRatio );
       renderer.setSize( screenSize.x, screenSize.y );
       renderer.autoClear = true;
-      renderer.setClearColor("#FFFFFF");
+      renderer.setClearColor("#000000");
 
       // set up controls
       controls = new THREE.OrbitControls( camera, renderer.domElement );
@@ -253,7 +238,7 @@ function init(name) {
 
     function readyGradientForTransferfunction() {
       canvas = document.createElement('canvas');
-      canvas.height = 20;
+      canvas.height = 32;
       canvas.width = 256;
       ctx = canvas.getContext('2d');
 

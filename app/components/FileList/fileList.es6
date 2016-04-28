@@ -9,17 +9,12 @@ function setUpEvent() {
 
 function doThings() {
   let props = context();
-  console.log(props);
   let files = props.files;
   let elem = $('#file-list');
 
   for(let filename in files) {
-    console.log(filename);
     let file = files[filename];
-    elem.append('<li id="' + filename + '" class="list-group-item">' + filename + ' <button id="btn-'+filename+'" class="btn btn-primary">'+ filename + '</button></li>');
-    $("#" + filename).on('click', () => {
-      console.log("file "+ filename);
-    });
+    elem.append('<li id="' + filename + '" class="list-group-item">' + filename + ' <button id="btn-'+filename+'" class="btn btn-primary">Render</button></li>');
 
     $('#btn-'+filename).on('click', () => {
       loadShaders(filename);

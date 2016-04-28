@@ -33,7 +33,7 @@ function createImage(name) {
   props.files[name] = {'data': data};
   props.image_arrays[name] = [];
   m.createMosaicImage(name, data, (canvas) => {
-    props.files[name] = {'tex': new THREE.Texture(canvas)};
+    props.files[name].tex = new THREE.Texture(canvas);
     $(document).trigger('new-file', {});
   });
 }

@@ -47,7 +47,6 @@ class Mosaic {
 		var sizey = data[1];
 		var sizez = data[2];
 	  let props = context();
-	  console.log(props);
 		props.files[name].sizez = sizez;
 		data = data.slice(2);
 		this.sizez = sizez;
@@ -76,11 +75,6 @@ class Mosaic {
 				setTimeout(createImages, 0);
 			} else {
 				that.updateAndPostProgress(100, true);
-
-				console.log("data");
-				console.log(data);
-				console.log(data[0]);
-				console.log("sizes: " + sizex + ", " + sizey + ", " + sizez);
 				callback(canvas);
 			}
 		})();
