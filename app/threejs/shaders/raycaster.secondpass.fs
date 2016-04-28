@@ -70,9 +70,9 @@ vec4 sampleAs3DTexture( vec3 texCoord ) {
 
 
   //How distant is zSlice1 to ZSlice2. Used to interpolate between one Z slice and the other.
-
+  float diff = 1.0-(texCoord.z*numSlices)/numSlices;
   //Finally interpolate between the two intermediate colors of each Z slice.
-  return mix(out1, out2, 0.5);
+  return mix(out1, out2, diff);
 }
 
 void main( void ) {

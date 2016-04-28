@@ -4,9 +4,8 @@ import Mosaic from '../../threejs/utils/createMosaicImage.es6';
 let data = null;
 
 export default function() {
-  document.getElementById('files').addEventListener('change', e => {
+  document.getElementById('file-input').addEventListener('change', e => {
     var files = e.target.files;
-    console.log("change files");
 
     if (!files.length) {
       alert('Please select a file!');
@@ -23,6 +22,8 @@ export default function() {
       }
     };
 
+    $('#progressBarParent').removeClass("hidden");  // show progressbar
+    $('#loading-file').text("Preparing file '" + file.name + "' ...");
     reader.readAsArrayBuffer(file);
   }, false);
 }
@@ -33,6 +34,8 @@ function createImage(name) {
   props.files[name] = {'data': data};
   props.image_arrays[name] = [];
   m.createMosaicImage(name, data, (canvas) => {
+    $('#progressBarParent').addClass("hidden"); // hide progressbar again
+    $('#loading-file').text(""); // Remove informational text
     props.files[name].tex = new THREE.Texture(canvas);
     $(document).trigger('new-file', {});
   });

@@ -175,8 +175,6 @@ function init(name) {
       controls.dampingFactor = 0.25;
       controls.enableZoom = true;
 
-      container.append( renderer.domElement );
-
       let b = new THREE.BoxGeometry(2,2,2);
       let bmat = new THREE.MeshBasicMaterial({color: "#FF0000"});
 
@@ -256,11 +254,6 @@ function init(name) {
 
         ctx.fillStyle = grd;
         ctx.fillRect(0,0,canvas.width -1 ,canvas.height -1 );
-
-        let img = document.getElementById("transferTexture");
-        img.src = canvas.toDataURL();
-        img.style.width = "256 px";
-        img.style.height = "20 px";
 
         transferTexture =  new THREE.Texture(canvas);
         transferTexture.wrapS = transferTexture.wrapT =  THREE.ClampToEdgeWrapping;
