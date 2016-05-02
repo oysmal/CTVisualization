@@ -1,4 +1,5 @@
 import context from '../components/Context/context.es6';
+import * as cutting from './cutting.es6';
 
 let container;
 
@@ -11,7 +12,7 @@ let transferTexture;
 let materialFirstPass, materialSecondPass;
 
 let mesh, geometry;
-let spheres = [];
+let cutting_x, cutting_y, cutting_z;
 
 let vertexShader1, fragmentShader1;
 let vertexShader2, fragmentShader2;
@@ -20,7 +21,7 @@ let transferTextureIsUpdated = false;
 let grd, canvas, ctx;
 let controlPointsTF = [];
 
-let screenSize = {x: 640, y: 480};
+let screenSize = {x: 800, y: 640};
 let windowHalfX = screenSize.x / 2;
 let windowHalfY = screenSize.y / 2;
 
@@ -77,7 +78,9 @@ function init(name) {
   container = $('#main');
   let props = context();
   tfWidgetInit();
-
+  
+  
+ 
   camera = new THREE.PerspectiveCamera( 60, screenSize.x/screenSize.y, 0.1, 100000 );
   camera.position.x = 0;
   camera.position.y = 1.5;
@@ -86,6 +89,9 @@ function init(name) {
 
   sceneFirstPass = new THREE.Scene();
   sceneSecondPass = new THREE.Scene();
+  
+  
+  cutting.init(sceneSecondPass);
 
   // create Texture
   cubeTexture = props.files[name].tex;
@@ -100,13 +106,16 @@ function init(name) {
   transferTexture = updateTransferFunction();
 
   rtTexture = new THREE.WebGLRenderTarget( screenSize.x, screenSize.y,
-    { 	minFilter: THREE.LinearFilter,
-      magFilter: THREE.LinearFilter,
-      wrapS:  THREE.ClampToEdgeWrapping,
-      wrapT:  THREE.ClampToEdgeWrapping,
-      format: THREE.RGBFormat,
-      type: THREE.FloatType,
-      generateMipmaps: false} );
+    { 	
+      minFilter: THREE.LinearFilter,
+        magFilter: THREE.LinearFilter,
+        wrapS:  THREE.ClampToEdgeWrapping,
+        wrapT:  THREE.ClampToEdgeWrapping,
+        format: THREE.RGBFormat,
+        type: THREE.FloatType,
+        generateMipmaps: false
+    } 
+  );
 
 
       materialFirstPass = new THREE.ShaderMaterial( {
@@ -149,6 +158,18 @@ function init(name) {
           maxSteps: {
             type: "1i" ,
             value: Math.ceil(Math.sqrt(3)*sizez)
+          },
+          x_plane_pos: {
+            type: "1f",
+            value: cutting.getCuttingPosX()
+          },
+          y_plane_pos: {
+            type: "1f",
+            value: cutting.getCuttingPosY()
+          },
+          z_plane_pos: {
+            type: "1f",
+            value: cutting.getCuttingPosZ()
           }
         }
       });
@@ -214,10 +235,14 @@ function init(name) {
     function render() {
 
       if (transferTextureIsUpdated) {
-        console.log(controlPointsTF);
         updateTextures();
         transferTextureIsUpdated = false;
       }
+      
+      //update cutting planes
+      materialSecondPass.uniforms.x_plane_pos.value = cutting.getCuttingPosX();
+      materialSecondPass.uniforms.y_plane_pos.value = cutting.getCuttingPosY();
+      materialSecondPass.uniforms.z_plane_pos.value = cutting.getCuttingPosZ();
 
       //Render first pass and store the world space coords of the back face fragments into the texture.
       renderer.render( sceneFirstPass, camera, rtTexture, true );

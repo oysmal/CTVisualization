@@ -23,9 +23,9 @@ function init() {
   });
 
   // Load menu
-  $('.menu_container').load('components/Menu/menu.html', () => {
+  /*$('.menu_container').load('components/Menu/menu.html', () => {
     menu();
-  });
+  });*/
 }
 
 function setNavigation() {

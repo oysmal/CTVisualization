@@ -1,12 +1,32 @@
-<div id="main" class="row">
-  <div class="col-sm-8">
-    <canvas id="appCanvas"></canvas>
-  </div>
+<div id="main">
+  <div class="row">
+    <div class="col-sm-8">
+      <canvas id="appCanvas"></canvas>
+    </div>
 
-  <div class="col-sm-4 main-right-menus">
-    <div class="row"><div id="tf-holder"  class="col-sm-12" ></div></div>
-    <div class="row"><div id="file-container"  class="col-sm-12" ></div></div>
-    <div class="row"><div id="file-list-container"  class="col-sm-12" ></div></div>
+    <div class="col-sm-4 main-right-menus">
+      <div class="row"><div id="tf-holder"  class="col-sm-12" ></div></div>
+      <div class="row"><div id="file-container"  class="col-sm-12" ></div></div>
+      <div class="row"><div id="file-list-container"  class="col-sm-12" ></div></div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-2">
+      <label for="move-xplane">Cut along x-axis:</label>
+      <input id="move-xplane" type="range" min="0" max="1000" value="0" step="1">
+      <button id="toggle-xplane">Toggle</button> 
+    </div>
+    <div class="col-sm-2">
+      <label for="move-yplane">Cut along y-axis:</label>
+      <input id="move-yplane" type="range" min="0" max="1000" value="0"  step="1">
+      <button id="toggle-yplane">Toggle</button>
+    </div>
+    <div class="col-sm-2">
+      <label for="move-zplane">Cut along z-axis:</label>
+      <input id="move-zplane" type="range" min="0" max="1000" value="0"  step="1">
+      <button id="toggle-zplane">Toggle</button>
+    </div>
+   
   </div>
 
 </div>

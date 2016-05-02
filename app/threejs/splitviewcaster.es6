@@ -199,12 +199,83 @@ if (renderingTimes == 0) {
     sceneSecondPass.add( meshSecondPass );
 
   } else if (renderingTimes == 1) {
-    console.log("ready for second time");
+  
+  // create Texture
+  cubeTexture2 = props.files[name].tex;
+  sizez2 = props.files[name].sizez;
+
+  cubeTexture2.needsUpdate = true;
+  cubeTexture2.generateMipmaps = false;
+  cubeTexture2.minFilter = THREE.LinearFilter;
+  cubeTexture2.magFilter = THREE.LinearFilter;
+
+  rtTexture2 = new THREE.WebGLRenderTarget( screenSize.x, screenSize.y,
+    {   minFilter: THREE.LinearFilter,
+      magFilter: THREE.LinearFilter,
+      wrapS:  THREE.ClampToEdgeWrapping,
+      wrapT:  THREE.ClampToEdgeWrapping,
+      format: THREE.RGBFormat,
+      type: THREE.FloatType,
+      generateMipmaps: false} );
+
+
+      materialFirstPass2 = new THREE.ShaderMaterial( {
+        vertexShader: vertexShader1,
+        fragmentShader: fragmentShader1,
+        side: THREE.BackSide
+      } );
+
+      materialSecondPass2 = new THREE.ShaderMaterial( {
+        vertexShader: vertexShader2,
+        fragmentShader: fragmentShader2,
+        side: THREE.FrontSide,
+        uniforms: {
+          tex:  {
+            type: "t",
+            value: rtTexture2
+          },
+          cubeTex:
+          {
+            type: "t",
+            value: cubeTexture2
+          },
+          transferTex:
+          {
+            type: "t",
+            value: transferTexture2
+          },
+          steps : {
+            type: "1f" ,
+            value: sizez2
+          },
+          numSlices : {
+            type: "1f" ,
+            value: sizez2
+          },
+          alphaCorrection : {
+            type: "1f" ,
+            value: 0.5
+          },
+          maxSteps: {
+            type: "1i" ,
+            value: Math.ceil(Math.sqrt(3)*sizez)
+          }
+        }
+    });
+
+
+    // Geometry setup
+    let boxGeometry = new THREE.BoxGeometry(1.0, 1.0, 1.0);
+    boxGeometry.doubleSided = true;
+    let meshFirstPass = new THREE.Mesh( boxGeometry, materialFirstPass2 );
+    let meshSecondPass = new THREE.Mesh( boxGeometry, materialSecondPass2 );
+    sceneFirstPass2.add( meshFirstPass );
+    sceneSecondPass2.add( meshSecondPass );
   }
+  
   window.addEventListener( 'resize', onWindowResize, false );
 
-  animate();
-      
+  animate();    
 }
 
 function onWindowResize() {
@@ -237,16 +308,34 @@ function render() {
     transferTextureIsUpdated = false;
   }
 
+<<<<<<< HEAD
   //Render first pass and store the world space coords of the back face fragments into the texture.
   renderer.render( sceneFirstPass, camera, rtTexture, true );
   //Render the second pass and perform the volume rendering.
   renderer.render( sceneSecondPass, camera );
   materialSecondPass.uniforms.steps.value = sizez;
   materialSecondPass.uniforms.alphaCorrection.value = 1.0;
+=======
+  renderer.render( sceneFirstPass, camera, rtTexture, true );
+  renderer.render( sceneSecondPass, camera );
+
+  renderer.render( sceneFirstPass2, camera, rtTexture2, true );
+  renderer.render( sceneSecondPass2, camera );
+  
+  materialSecondPass.uniforms.steps.value = sizez;
+  materialSecondPass.uniforms.alphaCorrection.value = 1.0;
+
+  materialSecondPass2.uniforms.steps.value = sizez2;
+  materialSecondPass2.uniforms.alphaCorrection.value = 1.0;
+>>>>>>> splitViewTemp
 }
 
 function updateTextures() {
   materialSecondPass.uniforms.transferTex.value = updateTransferFunction();
+<<<<<<< HEAD
+=======
+  materialSecondPass2.uniforms.transferTex.value = updateTransferFunction();
+>>>>>>> splitViewTemp
 }
 
 function readyGradientForTransferfunction() {
