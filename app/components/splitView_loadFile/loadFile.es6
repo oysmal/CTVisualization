@@ -37,6 +37,6 @@ function createImage(name) {
     $('#progressBarParent').addClass("hidden"); // hide progressbar again
     $('#loading-file').text(""); // Remove informational text
     props.files[name].tex = new THREE.Texture(canvas);
-    $(document).trigger('new-file', {});
+    $(document).trigger('new-split-file', {});
   });
 }

@@ -20,12 +20,14 @@ let transferTextureIsUpdated = false;
 let grd, canvas, ctx;
 let controlPointsTF = [];
 
-let screenSize = {x: 640, y: 480};
+//let screenSize = {x: 640, y: 480};
+let screenSize = {x: 640, y: 720};
 let windowHalfX = screenSize.x / 2;
 let windowHalfY = screenSize.y / 2;
 
 let sizez;
-
+let renderingTimes = 0;
+let volumes = [];
 
 function loadResource(url, callback) {
   $.ajax({
@@ -39,46 +41,62 @@ function loadResource(url, callback) {
   });
 }
 
-// Load shaders
-function loadShaders(filename) {
-  alert("test");
-  loadResource('/assets/shaders/raycaster.firstpass.vs', function(err, data) {
-    if(err) {
-      console.log(err);
-    }
-    vertexShader1 = data;
+//to cubetextures, sizeset, rtTexture, 
 
-    loadResource('/assets/shaders/raycaster.firstpass.fs', function(err, data) {
+// Load shaders
+function loadShaders(files) {
+    loadResource('/assets/shaders/raycaster.firstpass.vs', function(err, data) {
       if(err) {
         console.log(err);
       }
-      fragmentShader1 = data;
+      vertexShader1 = data;
 
-      loadResource('/assets/shaders/raycaster.secondpass.vs', function(err, data) {
+      loadResource('/assets/shaders/raycaster.firstpass.fs', function(err, data) {
         if(err) {
           console.log(err);
         }
-        vertexShader2 = data;
+        fragmentShader1 = data;
 
-        loadResource('/assets/shaders/raycaster.secondpass.fs', function(err, data) {
+        loadResource('/assets/shaders/raycaster.secondpass.vs', function(err, data) {
           if(err) {
             console.log(err);
           }
-          fragmentShader2 = data;
-          init(filename);
+          vertexShader2 = data;
+
+          loadResource('/assets/shaders/raycaster.secondpass.fs', function(err, data) {
+            if(err) {
+              console.log(err);
+            }
+            fragmentShader2 = data;
+
+            for (var i = 0; i < files.length; i++) {
+              if (renderingTimes == 0) {
+                preInit();
+              }
+              init(files[i]);
+              renderingTimes++;
+            }
+          });
         });
       });
     });
-  });
 }
 
 function preInit() {
   container = $('#main');
   tfWidgetInit();
+
+  renderer = new THREE.WebGLRenderer({canvas: document.getElementById('appCanvas')});
+  renderer.setPixelRatio( window.devicePixelRatio );
+  renderer.setSize( screenSize.x, screenSize.y );
+  renderer.autoClear = true;
+  renderer.setClearColor("#000000");
+
 }
 
 
 function init(name) {
+  if (renderingTimes == 0) {
 
   let props = context();
 
@@ -166,13 +184,6 @@ function init(name) {
       sceneFirstPass.add( meshFirstPass );
       sceneSecondPass.add( meshSecondPass );
 
-
-      renderer = new THREE.WebGLRenderer({canvas: document.getElementById('appCanvas')});
-      renderer.setPixelRatio( window.devicePixelRatio );
-      renderer.setSize( screenSize.x, screenSize.y );
-      renderer.autoClear = true;
-      renderer.setClearColor("#000000");
-
       // set up controls
       controls = new THREE.OrbitControls( camera, renderer.domElement );
       controls.enableDamping = true;
@@ -190,6 +201,7 @@ function init(name) {
       window.addEventListener( 'resize', onWindowResize, false );
 
       animate();
+      }
     }
 
     function onWindowResize() {
@@ -218,7 +230,6 @@ function init(name) {
     function render() {
 
       if (transferTextureIsUpdated) {
-        console.log(controlPointsTF);
         updateTextures();
         transferTextureIsUpdated = false;
       }

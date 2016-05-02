@@ -373,7 +373,6 @@ jQuery.tfWidget = function(container, callback) {
 }
 
 jQuery._tfWidget = function(container, callback) {
-  console.log("WE'RE IN");
   var tf = this;
   var str = '<div id="tf-container">'+
               '<div id="tf-widget"></div>'+
