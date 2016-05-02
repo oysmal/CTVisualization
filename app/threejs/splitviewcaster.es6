@@ -14,7 +14,7 @@ let materialFirstPass, materialSecondPass;
 let sceneFirstPass2, sceneSecondPass2;
 let rtTexture2, sizez2;
 let cubeTexture2;
-let materialFistPass2, materialSecondPass2;
+let materialFirstPass2, materialSecondPass2;
 
 
 let mesh, geometry;
@@ -119,13 +119,15 @@ function preInit() {
 
   sceneFirstPass = new THREE.Scene();
   sceneSecondPass = new THREE.Scene();
+  sceneFirstPass2 = new THREE.Scene();
+  sceneSecondPass2 = new THREE.Scene();
 }
 
 
 function init(name) {
   
 if (renderingTimes == 0) {
-  
+  console.log("0: " + name);
   // create Texture
   cubeTexture = props.files[name].tex;
   sizez = props.files[name].sizez;
@@ -199,7 +201,8 @@ if (renderingTimes == 0) {
     sceneSecondPass.add( meshSecondPass );
 
   } else if (renderingTimes == 1) {
-  
+  console.log("1: " + name);
+
   // create Texture
   cubeTexture2 = props.files[name].tex;
   sizez2 = props.files[name].sizez;
@@ -242,7 +245,7 @@ if (renderingTimes == 0) {
           transferTex:
           {
             type: "t",
-            value: transferTexture2
+            value: transferTexture
           },
           steps : {
             type: "1f" ,
@@ -271,11 +274,11 @@ if (renderingTimes == 0) {
     let meshSecondPass = new THREE.Mesh( boxGeometry, materialSecondPass2 );
     sceneFirstPass2.add( meshFirstPass );
     sceneSecondPass2.add( meshSecondPass );
-  }
-  
-  window.addEventListener( 'resize', onWindowResize, false );
 
-  animate();    
+    window.addEventListener( 'resize', onWindowResize, false );
+
+    animate();    
+  }
 }
 
 function onWindowResize() {
@@ -308,14 +311,7 @@ function render() {
     transferTextureIsUpdated = false;
   }
 
-<<<<<<< HEAD
-  //Render first pass and store the world space coords of the back face fragments into the texture.
-  renderer.render( sceneFirstPass, camera, rtTexture, true );
-  //Render the second pass and perform the volume rendering.
-  renderer.render( sceneSecondPass, camera );
-  materialSecondPass.uniforms.steps.value = sizez;
-  materialSecondPass.uniforms.alphaCorrection.value = 1.0;
-=======
+
   renderer.render( sceneFirstPass, camera, rtTexture, true );
   renderer.render( sceneSecondPass, camera );
 
@@ -327,15 +323,11 @@ function render() {
 
   materialSecondPass2.uniforms.steps.value = sizez2;
   materialSecondPass2.uniforms.alphaCorrection.value = 1.0;
->>>>>>> splitViewTemp
 }
 
 function updateTextures() {
   materialSecondPass.uniforms.transferTex.value = updateTransferFunction();
-<<<<<<< HEAD
-=======
   materialSecondPass2.uniforms.transferTex.value = updateTransferFunction();
->>>>>>> splitViewTemp
 }
 
 function readyGradientForTransferfunction() {
