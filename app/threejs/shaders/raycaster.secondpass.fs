@@ -7,6 +7,9 @@ uniform float steps;
 uniform float numSlices;
 uniform float alphaCorrection;
 uniform int maxSteps;
+uniform float x_plane_pos;
+uniform float y_plane_pos;
+uniform float z_plane_pos;
 
 // The maximum distance through our rendering volume is sqrt(3).
 // The maximum number of steps we take to travel a distance of 1 is 512.
@@ -16,6 +19,18 @@ const int MAX_STEPS_RAYCASTER = 1774;
 
 //Acts like a texture3D using Z slices and trilinear filtering.
 vec4 sampleAs3DTexture( vec3 texCoord ) {
+  
+  // cutting logic
+  if(texCoord.x > (x_plane_pos+0.5)) {
+    return vec4(0.0, 0.0, 0.0, 0.0);
+  }
+  if(texCoord.y > (y_plane_pos+0.5))  {
+    return vec4(0.0, 0.0, 0.0, 0.0);
+  }
+  if(texCoord.z < (z_plane_pos+0.5))  {
+    return vec4(0.0, 0.0, 0.0, 0.0);
+  }
+  
   float distPerSlice = 1.0;
 
   vec4 colorSlice1, colorSlice2, out1, out2;
