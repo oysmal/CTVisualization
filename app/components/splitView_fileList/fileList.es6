@@ -26,7 +26,7 @@ function doThings() {
   }
 
   if (filenames.length == 2) {
-    elem.append('<li style="margin-top:15px;"><button id="btn-renderSplit" class="btn btn-primary col-sm-3">Render</button></li>');
+    elem.append('<li><button style="margin-top:25px;" id="btn-renderSplit" class="btn btn-primary col-sm-3">Render</button></li>');
     $('#btn-renderSplit').on('click', () => {
         loadShaders(filenames);
       });
