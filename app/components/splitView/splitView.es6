@@ -1,14 +1,14 @@
 'use strict';
-import loadFile from '../LoadFile/loadFile.es6';
-import fileList from '../FileList/fileList.es6';
+import loadFile from '../splitView_loadFile/loadFile.es6';
+import fileList from '../splitView_fileList/fileList.es6';
 
 var main = () => {
 
-  $('#file-container').load('components/LoadFile/loadfile.html', () => {
+  $('#file-container').load('components/splitView_loadFile/loadfile.html', () => {
     loadFile();
   });
 
-  $('#file-list-container').load('components/FileList/filelist.html', () => {
+  $('#file-list-container').load('components/splitView_fileList/filelist.html', () => {
     fileList();
   });
 

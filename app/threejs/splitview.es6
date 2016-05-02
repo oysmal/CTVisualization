@@ -41,6 +41,7 @@ function loadResource(url, callback) {
 
 // Load shaders
 function loadShaders(filename) {
+  alert("test");
   loadResource('/assets/shaders/raycaster.firstpass.vs', function(err, data) {
     if(err) {
       console.log(err);
@@ -69,6 +70,11 @@ function loadShaders(filename) {
       });
     });
   });
+}
+
+function preInit() {
+  container = $('#main');
+  tfWidgetInit();
 }
 
 
@@ -299,4 +305,4 @@ function init(name) {
         camera.lookAt(new THREE.Vector3(0,0,0));
       };
 
-      export default {loadShaders, updateCamera};
+      export default {loadShaders, updateCamera, preInit};
