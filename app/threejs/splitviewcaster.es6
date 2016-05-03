@@ -33,7 +33,6 @@ let windowHalfX = screenSize.x / 2;
 let windowHalfY = screenSize.y / 2;
 
 let renderingTimes = 0;
-let volumes = [];
 let props;
 
 function loadResource(url, callback) {
@@ -47,8 +46,6 @@ function loadResource(url, callback) {
     }
   });
 }
-
-//to cubetextures, sizeset, rtTexture, materialfirst, materialsecond
 
 // Load shaders
 function loadShaders(files) {
@@ -92,14 +89,7 @@ function loadShaders(files) {
 function preInit() {
   container = $('#main');
   tfWidgetInit();
-
   props = context();
-
-  renderer = new THREE.WebGLRenderer({canvas: document.getElementById('appCanvas')});
-  renderer.setPixelRatio( window.devicePixelRatio );
-  renderer.setSize( screenSize.x, screenSize.y );
-  renderer.autoClear = true;
-  renderer.setClearColor("#000000");
 
   camera = new THREE.PerspectiveCamera( 60, screenSize.x/screenSize.y, 0.1, 100000 );
   camera.position.x = 0;
@@ -107,20 +97,24 @@ function preInit() {
   camera.position.z = -0.1;
   camera.lookAt(new THREE.Vector3(0,0,0));
 
-  readyGradientForTransferfunction();
+  sceneFirstPass = new THREE.Scene();
+  sceneSecondPass = new THREE.Scene();
+  sceneFirstPass2 = new THREE.Scene();
 
+  readyGradientForTransferfunction();
   transferTexture = updateTransferFunction();
+
+  renderer = new THREE.WebGLRenderer({canvas: document.getElementById('appCanvas')});
+  renderer.setPixelRatio( window.devicePixelRatio );
+  renderer.setSize( screenSize.x, screenSize.y );
+  renderer.autoClear = true;
+  renderer.setClearColor("#00FF00");
 
   // set up controls
   controls = new THREE.OrbitControls( camera, renderer.domElement );
   controls.enableDamping = true;
   controls.dampingFactor = 0.25;
   controls.enableZoom = true;
-
-  sceneFirstPass = new THREE.Scene();
-  sceneSecondPass = new THREE.Scene();
-  sceneFirstPass2 = new THREE.Scene();
-  sceneSecondPass2 = new THREE.Scene();
 }
 
 
@@ -128,6 +122,7 @@ function init(name) {
   
 if (renderingTimes == 0) {
   console.log("0: " + name);
+
   // create Texture
   cubeTexture = props.files[name].tex;
   sizez = props.files[name].sizez;
@@ -187,6 +182,18 @@ if (renderingTimes == 0) {
           maxSteps: {
             type: "1i" ,
             value: Math.ceil(Math.sqrt(3)*sizez)
+          },
+          x_plane_pos: {
+            type: "1f",
+            value: 10.0
+          },
+          y_plane_pos: {
+            type: "1f",
+            value: 10.0
+          },
+          z_plane_pos: {
+            type: "1f",
+            value: 10.0
           }
         }
     });
@@ -199,6 +206,7 @@ if (renderingTimes == 0) {
     let meshSecondPass = new THREE.Mesh( boxGeometry, materialSecondPass );
     sceneFirstPass.add( meshFirstPass );
     sceneSecondPass.add( meshSecondPass );
+    meshSecondPass.position.x = 2;
 
   } else if (renderingTimes == 1) {
   console.log("1: " + name);
@@ -262,6 +270,18 @@ if (renderingTimes == 0) {
           maxSteps: {
             type: "1i" ,
             value: Math.ceil(Math.sqrt(3)*sizez)
+          },
+          x_plane_pos: {
+            type: "1f",
+            value: 10.0
+          },
+          y_plane_pos: {
+            type: "1f",
+            value: 10.0
+          },
+          z_plane_pos: {
+            type: "1f",
+            value: 10.0
           }
         }
     });
@@ -273,12 +293,14 @@ if (renderingTimes == 0) {
     let meshFirstPass = new THREE.Mesh( boxGeometry, materialFirstPass2 );
     let meshSecondPass = new THREE.Mesh( boxGeometry, materialSecondPass2 );
     sceneFirstPass2.add( meshFirstPass );
-    sceneSecondPass2.add( meshSecondPass );
+    sceneSecondPass.add( meshSecondPass );
 
     window.addEventListener( 'resize', onWindowResize, false );
 
     animate();    
+
   }
+
 }
 
 function onWindowResize() {
@@ -313,10 +335,9 @@ function render() {
 
 
   renderer.render( sceneFirstPass, camera, rtTexture, true );
-  renderer.render( sceneSecondPass, camera );
-
   renderer.render( sceneFirstPass2, camera, rtTexture2, true );
-  renderer.render( sceneSecondPass2, camera );
+
+  renderer.render( sceneSecondPass, camera );
   
   materialSecondPass.uniforms.steps.value = sizez;
   materialSecondPass.uniforms.alphaCorrection.value = 1.0;
@@ -326,8 +347,9 @@ function render() {
 }
 
 function updateTextures() {
-  materialSecondPass.uniforms.transferTex.value = updateTransferFunction();
-  materialSecondPass2.uniforms.transferTex.value = updateTransferFunction();
+  let transferTemp = updateTransferFunction();
+  materialSecondPass.uniforms.transferTex.value = transferTemp;
+  materialSecondPass2.uniforms.transferTex.value = transferTemp;
 }
 
 function readyGradientForTransferfunction() {
@@ -397,4 +419,4 @@ function updateCamera(cam) {
   camera.lookAt(new THREE.Vector3(0,0,0));
 };
 
-export default {loadShaders, updateCamera, preInit};
+export default {loadShaders, updateCamera};

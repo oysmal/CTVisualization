@@ -196,14 +196,6 @@ function init(name) {
       controls.dampingFactor = 0.25;
       controls.enableZoom = true;
 
-      let b = new THREE.BoxGeometry(2,2,2);
-      let bmat = new THREE.MeshBasicMaterial({color: "#FF0000"});
-
-      let bmesh = new THREE.Mesh(b, bmat);
-      bmesh.position.x = 0;
-      bmesh.position.y = 0;
-      bmesh.position.z = 0;
-
       window.addEventListener( 'resize', onWindowResize, false );
 
       animate();

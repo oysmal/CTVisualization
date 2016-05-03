@@ -25,7 +25,7 @@ function doThings() {
     elem.append('<li id="' + filename + '" class="file-item row"><span class="col-sm-9">Data file: ' + filename + ' </span></li>');
   }
 
-  if (filenames.length == 2) {
+  if (filenames.length >= 2) {
     elem.append('<li><button style="margin-top:25px;" id="btn-renderSplit" class="btn btn-primary col-sm-3">Render</button></li>');
     $('#btn-renderSplit').on('click', () => {
         loadShaders(filenames);
