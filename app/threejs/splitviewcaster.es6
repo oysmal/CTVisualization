@@ -16,7 +16,6 @@ let rtTexture2, sizez2;
 let cubeTexture2;
 let materialFirstPass2, materialSecondPass2;
 
-
 let mesh, geometry;
 let spheres = [];
 
@@ -98,8 +97,8 @@ function preInit() {
   camera.lookAt(new THREE.Vector3(0,0,0));
 
   sceneFirstPass = new THREE.Scene();
-  sceneSecondPass = new THREE.Scene();
   sceneFirstPass2 = new THREE.Scene();
+  sceneSecondPass = new THREE.Scene();
 
   readyGradientForTransferfunction();
   transferTexture = updateTransferFunction();
@@ -193,7 +192,7 @@ if (renderingTimes == 0) {
           },
           z_plane_pos: {
             type: "1f",
-            value: 10.0
+            value: -10.0
           }
         }
     });
@@ -281,7 +280,7 @@ if (renderingTimes == 0) {
           },
           z_plane_pos: {
             type: "1f",
-            value: 10.0
+            value: -10.0
           }
         }
     });
@@ -293,7 +292,7 @@ if (renderingTimes == 0) {
     let meshFirstPass = new THREE.Mesh( boxGeometry, materialFirstPass2 );
     let meshSecondPass = new THREE.Mesh( boxGeometry, materialSecondPass2 );
     sceneFirstPass2.add( meshFirstPass );
-    sceneSecondPass.add( meshSecondPass );
+    sceneSecondPass.add( meshSecondPass ); 
 
     window.addEventListener( 'resize', onWindowResize, false );
 
