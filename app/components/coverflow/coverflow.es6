@@ -1,8 +1,19 @@
+import context from '../Context/context.es6';
 
 export default function() {
 
-				// Alphabet
-				console.log($);
+				
+				let props = context();
+				var xrays = props.image_arrays["hand"];
+				var counter = 0;
+				xrays.forEach(function(entry){
+					console.log("hei");
+					var img = "img"+counter;
+					$('.coverflow').append('<img class="reflected" id="'+img+'" src=""/>');
+					document.getElementById(img).setAttribute( 'src', entry.src);
+					counter++;
+				});
+				var mid = Math.round(counter/2);
 				$('.coverflow').coverflow();
 
 				$('#first').click(function() {
@@ -14,7 +25,7 @@ export default function() {
 				});
 
 				$('#goto6').click(function() {
-					$('.coverflow').coverflow('index', 6-1);	// zero-based index!
+					$('.coverflow').coverflow('index', mid-1);	// zero-based index!
 				});
 				
 				$('#keyboard').click(function() {

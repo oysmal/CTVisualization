@@ -24,7 +24,15 @@ var range = max/numberOfBars;
 var data=[];
 var i, index1,index2,frequency;
 var localMax=max/numberOfBars;
-
+var zeroFreq=0;
+while(values[index2]==1||values[index2]==0){
+   frequency = 0;
+    index2= 0;
+    zeroFreq++;
+    index2++;
+}
+console.log(zeroFreq);
+values=values.splice(frequency,values.length-1);
 for(i=0;i<numberOfBars;i++){
   frequency = 0;
   index2= 0;
@@ -33,10 +41,6 @@ for(i=0;i<numberOfBars;i++){
     frequency++;
     index2++;
   }
-  // var temp = values.splice(index,i*numberOfBars+1);
-  // temp.forEach(function(entry){
-  //   frequency++;
-  // });
 
   values=values.splice(frequency,values.length-1);
 
@@ -44,13 +48,10 @@ for(i=0;i<numberOfBars;i++){
     localMax=range*(i+1);
   data.push({Range: valueRange, frequency: frequency},);
 }
-console.log(data);
-//values.forEach(function(entry){
 
-//});
 //D3 BOOTSTRAP BEGINS HERE
 var margin = {top: 40, right: 20, bottom: 30, left: 40},
-    width = 960 - margin.left - margin.right,
+    width = 1200 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 
 var formatPercent = d3.format(".0%");
