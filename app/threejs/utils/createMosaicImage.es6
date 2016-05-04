@@ -48,6 +48,12 @@ class Mosaic {
 		var sizez = data[2];
 	  let props = context();
 		props.files[name].sizez = sizez;
+
+		// set default scales
+		props.files[name].scale_x = 1;
+		props.files[name].scale_y = 1;
+		props.files[name].scale_z = 1;
+
 		data = data.slice(2);
 		this.sizez = sizez;
 

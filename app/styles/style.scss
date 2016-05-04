@@ -3,9 +3,15 @@ $borderColor: #C3C3C3;
 $shadowColor: #010101;
 $defaultButtonColor: #DDDDDD;
 $defaultButtonFontColor: #9D9D9D;
+$defaultHeaderBackgroundColor: #2DBEEE;
 
 p {
   font-color: $testColor;
+}
+
+.navbar-bg {
+  background-color: $defaultHeaderBackgroundColor;
+  color: white !important;
 }
 
 #progressBarParent {
@@ -19,6 +25,14 @@ p {
 
 .align-right {
   text-align: right;
+}
+
+.display-inline {
+  display: inline;
+}
+
+.display-inline-block {
+  display: inline-block;
 }
 
 .hidden {
@@ -116,4 +130,48 @@ body, p {
 	font-variant: normal;
 	font-weight: 400;
 	line-height: 20px;
+}
+
+
+
+.ini-modal {
+	position: absolute !important;
+	width: 400px !important;
+	height: 300px !important;
+  top: 50% !important;
+  left: 50% !important;
+  margin-left: -200px !important;
+  margin-top: -150px !important;
+  z-index: 10 !important;
+  border-radius: 0.2em;
+  padding: 1em;
+  -webkit-box-shadow: -7px 10px 26px 0px rgba(0,0,0,0.45);
+  -moz-box-shadow: -7px 10px 26px 0px rgba(0,0,0,0.45);
+  box-shadow: -7px 10px 26px 0px rgba(0,0,0,0.45);
+  background-color: white;
+}
+
+.ini-modal-header {
+  height: 25%;
+  width: 100%;
+  left: 0;
+  top: 0;
+  right: 0;
+  text-align: center;
+  background-color: $defaultHeaderBackgroundColor;
+  color: white;
+}
+
+.ini-modal-content {
+  height: 50%;
+  width: 100%;
+  padding: 1em !important;
+  text-align: center !important;
+}
+
+.ini-modal-footer {
+  height: 25%;
+  width: 100%;
+  padding: 1em;
+  text-align: center;
 }

@@ -1,5 +1,6 @@
 import context from '../Context/context.es6';
 import Mosaic from '../../threejs/utils/createMosaicImage.es6';
+import loadIniFile from '../LoadIniFile/loadIniFile.es6';
 
 let data = null;
 
@@ -38,5 +39,8 @@ function createImage(name) {
     $('#loading-file').text(""); // Remove informational text
     props.files[name].tex = new THREE.Texture(canvas);
     $(document).trigger('new-file', {});
+
+    // Check if the user wants to load an ini file for the dataset
+    loadIniFile();
   });
 }

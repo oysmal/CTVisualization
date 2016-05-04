@@ -78,9 +78,9 @@ function init(name) {
   container = $('#main');
   let props = context();
   tfWidgetInit();
-  
-  
- 
+
+
+
   camera = new THREE.PerspectiveCamera( 60, screenSize.x/screenSize.y, 0.1, 100000 );
   camera.position.x = 0;
   camera.position.y = 1.5;
@@ -89,8 +89,8 @@ function init(name) {
 
   sceneFirstPass = new THREE.Scene();
   sceneSecondPass = new THREE.Scene();
-  
-  
+
+
   cutting.init(sceneSecondPass);
 
   // create Texture
@@ -106,7 +106,7 @@ function init(name) {
   transferTexture = updateTransferFunction();
 
   rtTexture = new THREE.WebGLRenderTarget( screenSize.x, screenSize.y,
-    { 	
+    {
       minFilter: THREE.LinearFilter,
         magFilter: THREE.LinearFilter,
         wrapS:  THREE.ClampToEdgeWrapping,
@@ -114,7 +114,7 @@ function init(name) {
         format: THREE.RGBFormat,
         type: THREE.FloatType,
         generateMipmaps: false
-    } 
+    }
   );
 
 
@@ -175,6 +175,9 @@ function init(name) {
       });
 
 
+      let obj = props.files[name];
+      console.log("OBJ: ");
+      console.log(obj);
       // Geometry setup
       let boxGeometry = new THREE.BoxGeometry(1.0, 1.0, 1.0);
       boxGeometry.doubleSided = true;
@@ -238,7 +241,7 @@ function init(name) {
         updateTextures();
         transferTextureIsUpdated = false;
       }
-      
+
       //update cutting planes
       materialSecondPass.uniforms.x_plane_pos.value = cutting.getCuttingPosX();
       materialSecondPass.uniforms.y_plane_pos.value = cutting.getCuttingPosY();
