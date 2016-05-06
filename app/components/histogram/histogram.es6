@@ -11,7 +11,7 @@ console.log(props);
 // console.log(files);
 var filenames=["hand","hand","hand"];
 filenames.forEach(function(entry){
-
+$('#namesHist').append('<option value="'+entry+'">'+entry+'</option>');
 
 });
 var fileData = props.files["hand"].data;
