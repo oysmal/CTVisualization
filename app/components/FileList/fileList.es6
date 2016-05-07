@@ -6,7 +6,9 @@ function setUpEvent() {
     doThings();
   });
 }
-
+  var names = [];
+  // let props = context();
+  // let files = props.files;
 function doThings() {
   let props = context();
   let files = props.files;
@@ -14,6 +16,9 @@ function doThings() {
   elem.empty();
 
   for(let filename in files) {
+    if (names.indexOf(filename)==-1){
+      names.push(filename);
+    }
     let file = files[filename];
     elem.append('<li id="' + filename + '" class="file-item row"><span class="col-sm-9">Data file: ' + filename + ' </span><button id="btn-'+filename+'" class="btn btn-primary col-sm-3">Render</button></li>');
 
@@ -23,5 +28,7 @@ function doThings() {
   }
   setUpEvent();
 }
-
+export function getFiles(){
+  return names;
+}
 export default doThings;

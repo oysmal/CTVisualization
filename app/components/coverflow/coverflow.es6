@@ -1,26 +1,30 @@
 import context from '../Context/context.es6';
+import {getFiles} from '../FileList/fileList.es6';
 
 export default function() {
 
 				
 				let props = context();
-				var fileNames=["one","hand","three"]; // change me
+				let fileNames = getFiles();
+				//console.log(fileNames);
+				//var fileNames=["one","hand","three"]; // change me
 				fileNames.forEach(function(entry){
 					$('#namesXray').append('<option value="'+entry+'">'+entry+'</option>');
 				});
 				
-				$( "#namesXray" ).change(function() {
+				$( "#namesXray" ).click(function() {
 						$('.coverflow').empty();
 						var counter = 0;
 						var name=$( "#namesXray option:selected" ).text();
+						console.log(name);
   						var xrays = props.image_arrays[name];
 						xrays.forEach(function(entry){
 						var img = "img"+counter;
-						$('.coverflow').append('<img class="reflected" id="'+img+'" src=""/>');
-						document.getElementById(img).setAttribute( 'src', entry.src);
-						counter++;
+							$('.coverflow').append('<img class="reflected" id="'+img+'" src=""/>');
+							document.getElementById(img).setAttribute( 'src', entry.src);
+							counter++;
 
-					});
+						});
 					var mid = Math.round(counter/2);
 				
 
