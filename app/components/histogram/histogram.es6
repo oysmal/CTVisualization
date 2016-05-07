@@ -1,20 +1,20 @@
 import context from '../Context/context.es6';
-import fileList from '../FileList/fileList.es6';
+import {getFiles} from '../FileList/fileList.es6';
 
 
 export default function(){
 
 let props = context();
-console.log(props);
-//let files = fileList();
-// console.log("hi");
-// console.log(files);
-var filenames=["hand","hand","hand"];
+
+let filenames=getFiles();
 filenames.forEach(function(entry){
 $('#namesHist').append('<option value="'+entry+'">'+entry+'</option>');
 
 });
-var fileData = props.files["hand"].data;
+$( "#namesHist" ).click(function() {
+$(".histogram_container").empty();
+var name=$( "#namesHist option:selected" ).text();
+var fileData = props.files[name].data;
 var values=[];
 var count =0;
 fileData.forEach(function(entry) {
@@ -36,6 +36,8 @@ var i, index1,index2,frequency;
 var localMax=max/numberOfBars;
 var zeroFreq=0;
 for(i=0;i<numberOfBars;i++){
+  console.log("range then localMax");
+  console.log(range);
   frequency = 0;
   index2= 0;
   localMax=Math.round(localMax);
@@ -48,17 +50,21 @@ for(i=0;i<numberOfBars;i++){
     index2++;
 
   }
-  console.log(zeroFreq);
+   console.log(localMax);
+  //console.log(zeroFreq);
   values=values.splice(frequency,values.length-1);
 
-  var valueRange= Math.round(range)*i + " - "+ localMax.toString();
-    localMax=range*(i+1);
+  var valueRange= Math.round(range)*i + " - "+ localMax;
+  console.log("value range");
+    console.log(valueRange);
+    localMax=range*(i+2);
+   
   data.push({Range: valueRange, frequency: frequency},);
 }
 
 //D3 BOOTSTRAP BEGINS HERE
-var margin = {top: 40, right: 20, bottom: 30, left: 100},
-    width = 1500 - margin.left - margin.right,
+var margin = {top: 40, right: 20, bottom: 30, left: 80},
+    width = 1300 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 
 var formatPercent = d3.format(".0%");
@@ -122,6 +128,7 @@ svg.selectAll(".bar")
     .attr("height", function(d) { return height - y(d.frequency); })
     .on('mouseover', tip.show)
     .on('mouseout', tip.hide)
+});
 }
 
 function type(d) {
