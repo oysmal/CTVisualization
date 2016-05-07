@@ -4,67 +4,50 @@ import {getFiles} from '../FileList/fileList.es6';
 
 export default function(){
 
-let props = context();
-
-let filenames=getFiles();
-filenames.forEach(function(entry){
-$('#namesHist').append('<option value="'+entry+'">'+entry+'</option>');
-
-});
-$( "#namesHist" ).click(function() {
-$(".histogram_container").empty();
-var name=$( "#namesHist option:selected" ).text();
-var fileData = props.files[name].data;
-var values=[];
-var count =0;
-fileData.forEach(function(entry) {
-    
+  let props = context();
+  let filenames=getFiles();
+  filenames.forEach(function(entry){
+    $('#namesHist').append('<option value="'+entry+'">'+entry+'</option>'); //build dropdownmenu
+  });
+  $( "#namesHist" ).click(function() { //when one is clickedon
+    $(".histogram_container").empty();
+    var name=$( "#namesHist option:selected" ).text();
+    var fileData = props.files[name].data;
+    var values=[];
+    var count =0;
+    fileData.forEach(function(entry) {
     if (count == 0||count ==1||count ==2 ){
-    }
+      } // the first three values aren't data values
     else{
       values.push(entry);
-    }
+      }
     count = count +1;
-});
-values=values.sort(function(a, b){return a-b});
-var max= values[count-4];
-console.log(max);
-var numberOfBars = 15; //this is artbitrarly chosen
-var range = max/numberOfBars;
-var data=[];
-var i, index1,index2,frequency;
-var localMax=max/numberOfBars;
-var zeroFreq=0;
-for(i=0;i<numberOfBars;i++){
-  console.log("range then localMax");
-  console.log(range);
-  frequency = 0;
-  index2= 0;
-  localMax=Math.round(localMax);
-  while(values[index2]<=localMax){
-    if(values[index2]=="0"||values[index2]==0){
-      //console.log(values[index2]);
-      zeroFreq++;
+    });
+    values=values.sort(function(a, b){return a-b});
+    var max= values[count-4];
+    var numberOfBars = 15; //this is artbitrarly chosen
+    var range = max/numberOfBars;
+    var data=[];
+    var i, index1,index2,frequency;
+    var localMax=max/numberOfBars;
+    var zeroFreq=0;
+    for(i=0;i<numberOfBars;i++){ //organize into ranges
+      frequency = 0;
+      index2= 0;
+      localMax=Math.round(localMax);
+      while(values[index2]<=localMax){
+        frequency++;
+        index2++;
+      }
+      values=values.splice(frequency,values.length-1);
+      var valueRange= Math.round(range)*i + " - "+ localMax;
+      localMax=range*(i+2);
+      data.push({Range: valueRange, frequency: frequency},);
     }
-    frequency++;
-    index2++;
-
-  }
-   console.log(localMax);
-  //console.log(zeroFreq);
-  values=values.splice(frequency,values.length-1);
-
-  var valueRange= Math.round(range)*i + " - "+ localMax;
-  console.log("value range");
-    console.log(valueRange);
-    localMax=range*(i+2);
-   
-  data.push({Range: valueRange, frequency: frequency},);
-}
 
 //D3 BOOTSTRAP BEGINS HERE
 var margin = {top: 40, right: 20, bottom: 30, left: 80},
-    width = 1300 - margin.left - margin.right,
+    width = 1200 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 
 var formatPercent = d3.format(".0%");
