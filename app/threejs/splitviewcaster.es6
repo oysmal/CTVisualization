@@ -297,7 +297,7 @@ if (renderStage == 1) {
           },
           y_plane_pos: {
             type: "1f",
-            value: 10.0
+            value: -10.0
           },
           z_plane_pos: {
             type: "1f",
@@ -305,15 +305,15 @@ if (renderStage == 1) {
           },
           x_plane_cut_dir: {
             type: "1f",
-            value: 1.0
+            value: -1.0
           },
           y_plane_cut_dir: {
             type: "1f",
-            value: 1.0
+            value: -1.0
           },
           z_plane_cut_dir: {
             type: "1f",
-            value: 1.0
+            value: -1.0
           }
         }
     });
