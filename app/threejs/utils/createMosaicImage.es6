@@ -49,19 +49,15 @@ class Mosaic {
 	  let props = context();
 		props.files[name].sizez = sizez;
 
-		// set default scales
-		props.files[name].scale_x = 1;
-		props.files[name].scale_y = 1;
-		props.files[name].scale_z = 1;
-
 		data = data.slice(2);
 		this.sizez = sizez;
 
 		var canvas = document.createElement("canvas");
 		this.scaleFactor = 1.0;
-		if (sizex*sizey > 16384) {
+		if (sizex*sizez > 16384.0) {
 			this.scaleFactor = sizex*sizez/16384.0;
 		}
+
 		canvas.setAttribute("width", sizex*sizez/this.scaleFactor);
 		canvas.setAttribute("height", sizey/this.scaleFactor);
 		var ctx = canvas.getContext('2d');

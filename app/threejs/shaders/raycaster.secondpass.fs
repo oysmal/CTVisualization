@@ -10,6 +10,9 @@ uniform int maxSteps;
 uniform float x_plane_pos;
 uniform float y_plane_pos;
 uniform float z_plane_pos;
+uniform float x_plane_cut_dir;
+uniform float y_plane_cut_dir;
+uniform float z_plane_cut_dir;
 
 // The maximum distance through our rendering volume is sqrt(3).
 // The maximum number of steps we take to travel a distance of 1 is 512.
@@ -19,18 +22,37 @@ const int MAX_STEPS_RAYCASTER = 1774;
 
 //Acts like a texture3D using Z slices and trilinear filtering.
 vec4 sampleAs3DTexture( vec3 texCoord ) {
-  
+
   // cutting logic
-  if(texCoord.x > (x_plane_pos+0.5)) {
-    return vec4(0.0, 0.0, 0.0, 0.0);
+  if(x_plane_cut_dir > 0.0) {
+    if(texCoord.x > (x_plane_pos+0.5)) {
+      return vec4(0.0, 0.0, 0.0, 0.0);
+    }
+  } else {
+    if(texCoord.x < (x_plane_pos+0.5)) {
+      return vec4(0.0, 0.0, 0.0, 0.0);
+    }
   }
-  if(texCoord.y > (y_plane_pos+0.5))  {
-    return vec4(0.0, 0.0, 0.0, 0.0);
+
+  if(y_plane_cut_dir > 0.0) {
+    if(texCoord.y > (y_plane_pos+0.5))  {
+      return vec4(0.0, 0.0, 0.0, 0.0);
+    }
+  } else {
+    if(texCoord.y < (y_plane_pos+0.5))  {
+      return vec4(0.0, 0.0, 0.0, 0.0);
+    }
   }
-  if(texCoord.z < (z_plane_pos+0.5))  {
-    return vec4(0.0, 0.0, 0.0, 0.0);
+  if(z_plane_cut_dir > 0.0) {
+    if(texCoord.z < (z_plane_pos+0.5))  {
+      return vec4(0.0, 0.0, 0.0, 0.0);
+    }
+  } else {
+    if(texCoord.z > (z_plane_pos+0.5))  {
+      return vec4(0.0, 0.0, 0.0, 0.0);
+    }
   }
-  
+
   float distPerSlice = 1.0;
 
   vec4 colorSlice1, colorSlice2, out1, out2;
@@ -64,18 +86,18 @@ vec4 sampleAs3DTexture( vec3 texCoord ) {
   colorSlice1 = texture2D( cubeTex, texCoordSlice1 );
   colorSlice2 = texture2D( cubeTex, texCoordSlice2 );
 
-//  float val1 = colorSlice1.r*256.0;
-//  val1 = (val1*255.0 + colorSlice1.g*255.0)/4095.0;
-//  colorSlice1.a = val1;
+  //  float val1 = colorSlice1.r*256.0;
+  //  val1 = (val1*255.0 + colorSlice1.g*255.0)/4095.0;
+  //  colorSlice1.a = val1;
 
 
-//  float val2 = colorSlice2.r*256.0;
-//  val2 = (val1*255.0 + colorSlice1.g*255.0)/4095.0;
-//  colorSlice2.a = val2;
+  //  float val2 = colorSlice2.r*256.0;
+  //  val2 = (val1*255.0 + colorSlice1.g*255.0)/4095.0;
+  //  colorSlice2.a = val2;
 
-//  if(val1 < 0.1) {
-//    return vec4(0.0);
-//  }
+  //  if(val1 < 0.1) {
+  //    return vec4(0.0);
+  //  }
 
   //Based on the opacity obtained earlier, get the RGB color in the transfer function texture.
   out1 = texture2D( transferTex, vec2( colorSlice1.a, 1.0) );
@@ -137,7 +159,7 @@ void main( void ) {
   for(int i = 0; i < MAX_STEPS_RAYCASTER; i++) {
 
     if(i >= maxSteps)
-      break;
+    break;
 
     //Get the voxel intensity value from the 3D texture.
     colorSample = sampleAs3DTexture( currentPosition );
@@ -163,7 +185,7 @@ void main( void ) {
 
     //If the length traversed is more than the ray length, or if the alpha accumulated reaches 1.0 then exit.
     if(accumulatedLength >= rayLength || accumulatedAlpha >= 1.0 )
-      break;
+    break;
   }
 
   gl_FragColor  = accumulatedColor;

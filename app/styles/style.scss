@@ -5,13 +5,17 @@ $defaultButtonColor: #DDDDDD;
 $defaultButtonFontColor: #9D9D9D;
 $defaultHeaderBackgroundColor: #2DBEEE;
 
+$darkest: #313131;
+$dark: #464646;
+$gray: #E1E1E1;
+$light_gray: #F8F8F8;
+$dark_green: #599E18;
+$dirty_green: #8EBD62;
+$lime_green: #B3FF6B;
+$light_green: #DFFFC1;
+
 p {
   font-color: $testColor;
-}
-
-.navbar-bg {
-  background-color: $defaultHeaderBackgroundColor;
-  color: white !important;
 }
 
 #progressBarParent {
@@ -48,13 +52,13 @@ p {
 }
 
 .load-file {
-  border-top: 0.2em solid $borderColor;
+  border-top: 0.2em solid $light_gray;
   padding-top: 1em;
 }
 
 .main-right-menus {
-  border-left: 0.1em solid $borderColor;
-  padding-left: 0.5em;
+  padding: 0.5em;
+  height: 100%;
 }
 
 .file-item {
@@ -62,7 +66,7 @@ p {
   display: block;
   margin: 0.5em;
   padding: 0.2em;
-  border-bottom: 0.1em solid $borderColor;
+  border-bottom: 0.1em solid $light_gray;
 
 }
 
@@ -132,46 +136,56 @@ body, p {
 	line-height: 20px;
 }
 
-
-
-.ini-modal {
-	position: absolute !important;
-	width: 400px !important;
-	height: 300px !important;
-  top: 50% !important;
-  left: 50% !important;
-  margin-left: -200px !important;
-  margin-top: -150px !important;
-  z-index: 10 !important;
-  border-radius: 0.2em;
-  padding: 1em;
-  -webkit-box-shadow: -7px 10px 26px 0px rgba(0,0,0,0.45);
-  -moz-box-shadow: -7px 10px 26px 0px rgba(0,0,0,0.45);
-  box-shadow: -7px 10px 26px 0px rgba(0,0,0,0.45);
-  background-color: white;
+// override bootstrap
+.navbar-default {
+  background-color: $darkest;
+  border-color: $darkest;
 }
 
-.ini-modal-header {
-  height: 25%;
-  width: 100%;
-  left: 0;
-  top: 0;
-  right: 0;
-  text-align: center;
-  background-color: $defaultHeaderBackgroundColor;
-  color: white;
+.navbar-default .navbar-brand {
+  color: $dark_green;
 }
 
-.ini-modal-content {
-  height: 50%;
-  width: 100%;
-  padding: 1em !important;
-  text-align: center !important;
+.navbar-default .navbar-brand:hover,
+.navbar-default .navbar-brand:focus {
+    color: $lime_green;
 }
 
-.ini-modal-footer {
-  height: 25%;
-  width: 100%;
-  padding: 1em;
-  text-align: center;
+.navbar-default .navbar-nav > li > a{
+  color: $dark_green;
 }
+
+.navbar-default .navbar-nav > li > a:hover,
+.navbar-default .navbar-nav > li > a:focus {
+    color: $lime_green;
+}
+
+.navbar-default .navbar-nav > .active > a,
+.navbar-default .navbar-nav > .active > a:hover,
+.navbar-default .navbar-nav > .active > a:focus {
+    color: $dirty_green;
+    background-color: $dark;
+}
+
+.navbar-default .navbar-nav > .open > a,
+.navbar-default .navbar-nav > .open > a:hover,
+.navbar-default .navbar-nav > .open > a:focus {
+    color: $dirty_green;
+    background-color: $dark;
+}
+
+.panel .panel-default {
+  padding: 0.5em !important;
+}
+
+.btn-default,
+.btn-default:hover,
+.btn-default:active,
+.btn-default:visited,
+.btn-default:focus {
+    background-color: $darkest;
+    color: $dark_green;
+    border-color: $dark_green;
+
+}
+// end bootstrap override

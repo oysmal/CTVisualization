@@ -1,6 +1,5 @@
 import context from '../Context/context.es6';
 import Mosaic from '../../threejs/utils/createMosaicImage.es6';
-import loadIniFile from '../LoadIniFile/loadIniFile.es6';
 
 let data = null;
 
@@ -32,15 +31,12 @@ export default function() {
 function createImage(name) {
   let props = context();
   let m = new Mosaic();
-  props.files[name] = {'data': data};
+  props.files[name] = {data: data};
   props.image_arrays[name] = [];
   m.createMosaicImage(name, data, (canvas) => {
     $('#progressBarParent').addClass("hidden"); // hide progressbar again
     $('#loading-file').text(""); // Remove informational text
     props.files[name].tex = new THREE.Texture(canvas);
     $(document).trigger('new-file', {});
-
-    // Check if the user wants to load an ini file for the dataset
-    loadIniFile();
   });
 }

@@ -27,11 +27,14 @@ function init() {
   });*/
 }
 
+
 function setNavigation() {
   // navigate to home. Replace all html in main_container.
   // id for home is 0
   $('#home-nav').on('click', () => {
     if(active != 0) {
+      removeActiveClasses();
+      $('#home-nav').addClass('active');
       $('.main_container').empty();
       $('.main_container').load('components/Main/main.html', () => {
         main();
@@ -45,6 +48,8 @@ function setNavigation() {
   // id for slides is 1
   $('#slices-nav').on('click', () => {
     if(active != 1) {
+      removeActiveClasses();
+      $('#slices-nav').addClass('active');
       $('.main_container').empty();
       $('.main_container').load('components/test.html', () => {
 
@@ -57,6 +62,8 @@ function setNavigation() {
   // id for histogram is 2
   $('#histogram-nav').on('click', () => {
     if(active != 2) {
+      removeActiveClasses();
+      $('#histogram-nav').addClass('active');
       $('.main_container').empty();
       $('.main_container').load('components/histogram/histogram.html', () => {
         	histogram();
@@ -69,6 +76,8 @@ function setNavigation() {
   // id for coverflow is 3
   $('#coverflow-nav').on('click', () => {
     if(active != 3) {
+      removeActiveClasses();
+      $('#coverflow-nav').addClass('active');
       $('.main_container').empty();
       $('.main_container').load('components/coverflow/coverflow.html', () => {
         coverflow();
@@ -76,4 +85,12 @@ function setNavigation() {
       active = 3;
     }
   });
+}
+
+
+function removeActiveClasses() {
+  $('#home-nav').removeClass('active');
+  $('#slices-nav').removeClass('active');
+  $('#histogram-nav').removeClass('active');
+  $('#coverflow-nav').removeClass('active');
 }
