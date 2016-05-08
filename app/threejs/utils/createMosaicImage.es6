@@ -6,6 +6,22 @@ class Mosaic {
 		this.currentProgress;
 		this.scaleFactor = 1.0;
 		this.sizez = 1.0;
+		this.xray_colors = document.createElement("canvas");
+		this.xray_colors.setAttribute('width', 256);
+		this.xray_colors.setAttribute('height', 2);
+		let ctx = this.xray_colors.getContext('2d');
+		ctx.clearRect(0,0,this.xray_colors.width, this.xray_colors.height);
+
+	  let grd = ctx.createLinearGradient(0, 0, this.xray_colors.width -1 , this.xray_colors.height - 1);
+	  grd.addColorStop(0.0, 'rgba(0, 0, 0, 0)');
+		grd.addColorStop(1/255*13, 'rgba(255, 112, 126, 1.0)');
+		grd.addColorStop(1/255*25, 'rgba(100, 0, 242, 1.0)');
+	  grd.addColorStop(1/255*50, 'rgba(255, 0, 0, 1.0)');
+	  grd.addColorStop(1/255*100, 'rgba(211, 209, 209, 1.0)');
+	  grd.addColorStop(1.0, 'rgba(255, 255, 255, 1.0)');
+
+	  ctx.fillStyle = grd;
+	  ctx.fillRect(0,0,this.xray_colors.width -1 ,this.xray_colors.height -1 );
 	}
 
 	getSizez() {
@@ -17,14 +33,19 @@ class Mosaic {
 	}
 
 	createOneImage(sizex, sizey, data, callback) {
-		var canvas = document.createElement("canvas");
+		let canvas = document.createElement("canvas");
+		let canvas2 = document.createElement("canvas");
 		canvas.setAttribute("width", sizex);
 		canvas.setAttribute("height", sizey);
-		var ctx = canvas.getContext('2d');
+		canvas2.setAttribute("width", sizex);
+		canvas2.setAttribute("height", sizey);
+		let ctx = canvas.getContext('2d');
+		let ctx2 = canvas2.getContext('2d');
 
-		for(var i = 0; i < sizey; i++) {
-			for(var j = 0; j < sizex; j++) {
+		for(let i = 0; i < sizey; i++) {
+			for(let j = 0; j < sizex; j++) {
 				var id = ctx.createImageData(1,1);
+				var id2 = ctx2.createImageData(1,1);
 				// var msb = data[i*sizex+j] & 0xFF00;
 				// msb = msb >> 8;
 				// var lsb = data[i*sizex+j] & 0x00FF;
@@ -33,20 +54,32 @@ class Mosaic {
 				id.data[1] = 0;//lsb;	// g
 				id.data[2] = 0;	// b
 				id.data[3] = Math.floor(data[i*sizex+j]/4095*255);	// a
+
+				let color = this.xray_colors.getContext('2d').getImageData(id.data[3], 0, 1, 1);
+				id2.data[0] = color.data[0];
+				id2.data[1] = color.data[1];
+				id2.data[2] = color.data[2];
+				id2.data[3] = color.data[3];
+				ctx2.putImageData(id2, i, j);
+
 				ctx.putImageData(id, j, i); // row based, so add to x=j, y=i
 			}
 		}
 
-		var image = new Image();
+		let image = new Image();
 		image.src = canvas.toDataURL("/image/png");
-		callback(image);
+		let image2 = new Image();
+		image2.src = canvas2.toDataURL("/image/png");
+		callback(image, image2);
 	}
 
 	createMosaicImage(name, data, callback) {
-		var sizex = data[0];
-		var sizey = data[1];
-		var sizez = data[2];
+		let sizex = data[0];
+		let sizey = data[1];
+		let sizez = data[2];
 	  let props = context();
+		props.files[name].sizex = sizex;
+		props.files[name].sizey = sizey;
 		props.files[name].sizez = sizez;
 
 		data = data.slice(2);
@@ -67,8 +100,8 @@ class Mosaic {
 
 		(function createImages() {
 			that.updateAndPostProgress(i, false);
-			that.createOneImage(sizex, sizey, data.slice(i*sizex*sizey, i*sizex*sizey+sizex*sizey), (image) => {
-				props.image_arrays[name].push(image);
+			that.createOneImage(sizex, sizey, data.slice(i*sizex*sizey, i*sizex*sizey+sizex*sizey), (image, image2) => {
+				props.image_arrays[name].push(image2);
 				ctx.drawImage(image, sizex*i/that.scaleFactor, 0, sizex/that.scaleFactor, sizey/that.scaleFactor);
 			});
 

@@ -1,13 +1,13 @@
 
 
 			.coverflow {
-				height: 100px;
+				height: 400px;
 				border-bottom: solid 2px black;
 			}
 
 			.coverflow .cover {
 				width: 100px;
-				height: 100px;
+				height: 400px;
 				cursor: pointer;
 				font-size: 500%;
 				border: solid 2px black;

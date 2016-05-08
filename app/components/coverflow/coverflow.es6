@@ -3,7 +3,7 @@ import {getFiles} from '../FileList/fileList.es6';
 
 export default function() {
 
-				
+
 				let props = context();
 				let fileNames = getFiles();
 				//console.log(fileNames);
@@ -11,7 +11,7 @@ export default function() {
 				fileNames.forEach(function(entry){
 					$('#namesXray').append('<option value="'+entry+'">'+entry+'</option>');
 				});
-				
+
 				$( "#namesXray" ).click(function() {
 						$('.coverflow').empty();
 						var counter = 0;
@@ -26,7 +26,7 @@ export default function() {
 
 						});
 					var mid = Math.round(counter/2);
-				
+
 
 
 				$('.coverflow').coverflow();
@@ -42,15 +42,15 @@ export default function() {
 				$('#goto6').click(function() {
 					$('.coverflow').coverflow('index', mid-1);	// zero-based index!
 				});
-				
+
 				$('#keyboard').click(function() {
 					$('.coverflow').coverflow('option', 'enableKeyboard', $(this).is(':checked'));
 				});
-				
+
 				$('#wheel').click(function() {
 					$('.coverflow').coverflow('option', 'enableWheel', $(this).is(':checked'));
 				});
-				
+
 				$('#click').click(function() {
 					$('.coverflow').coverflow('option', 'enableClick', $(this).is(':checked'));
 				});
@@ -70,7 +70,7 @@ export default function() {
 					visible:		'density',
 					selectedCss:	{	opacity: 1	},
 					outerCss:		{	opacity: .1	},
-					
+
 					confirm:		function() {
 						console.log('Confirm');
 					},
@@ -79,8 +79,8 @@ export default function() {
 						var img = $(cover).children().andSelf().filter('img').last();
 						$('#photos-name').text(img.data('name') || 'unknown');
 					}
-					
-				});	
+
+				});
 
 				$('#leakdetect').click(function() {
 					$('#leakbucket').empty();
@@ -89,5 +89,5 @@ export default function() {
 					}
 				});
 				});
-			
+
 }
