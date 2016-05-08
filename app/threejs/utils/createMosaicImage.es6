@@ -10,7 +10,6 @@ class Mosaic {
 		this.xray_colors.setAttribute('width', 256);
 		this.xray_colors.setAttribute('height', 2);
 		let ctx = this.xray_colors.getContext('2d');
-		ctx.clearRect(0,0,this.xray_colors.width, this.xray_colors.height);
 
 	  let grd = ctx.createLinearGradient(0, 0, this.xray_colors.width -1 , this.xray_colors.height - 1);
 	  grd.addColorStop(0.0, 'rgba(0, 0, 0, 0)');
@@ -60,8 +59,8 @@ class Mosaic {
 				id2.data[0] = color.data[0];
 				id2.data[1] = color.data[1];
 				id2.data[2] = color.data[2];
-				id2.data[3] = color.data[3];
-				ctx2.putImageData(id2, i, j);
+				id2.data[3] = 255;
+				ctx2.putImageData(id2, j, i);
 
 				ctx.putImageData(id, j, i); // row based, so add to x=j, y=i
 			}
@@ -74,16 +73,15 @@ class Mosaic {
 
 
 		let canvas3 = document.createElement("canvas");
-		canvas3.setAttribute("width", sizex*2.0);
-		canvas3.setAttribute("height", sizey*2.0);
+		canvas3.setAttribute("width", sizex*4.0);
+		canvas3.setAttribute("height", sizey*4.0);
 		let ctx3 = canvas3.getContext('2d');
 		let image3 = new Image();
 		ctx3.drawImage(image2, 0, 0);
-		ctx3.scale(2.0,2.0);
-		ctx3.clearRect(0, 0, canvas3.width, canvas3.height);
+		ctx3.scale(4.0,4.0);
 		ctx3.drawImage(image2, 0, 0);
 		image3.src = canvas3.toDataURL("image/png");
-		callback(image, image2);
+		callback(image, image3);
 	}
 
 	createMosaicImage(name, data, callback) {

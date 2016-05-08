@@ -19,7 +19,7 @@ function prepareOnCheckEvents() {
 
     if (filenames.length == 2) {
       let elem = $('#file-list');
-      elem.append('<li id="renderButtonHolder" class="file-item row"><button style="margin-top:25px;" id="btn-renderSplit" class="btn btn-primary col-sm-3">Render</button></li>');
+      elem.append('<li id="renderButtonHolder" class="file-item row"><button style="margin-top:25px;" id="btn-renderSplit" class="btn btn-default col-sm-3">Render</button></li>');
 
       $('#btn-renderSplit').on('click', () => {
         loadShaders(filenames);

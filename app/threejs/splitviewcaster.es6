@@ -15,6 +15,10 @@ let sceneFirstPass2, sceneSecondPass2;
 let rtTexture2, sizez2;
 let cubeTexture2;
 let materialFirstPass2, materialSecondPass2;
+let meshSecondPass, meshSecondPass2;
+let isSwapped = false;
+let positionForMesh = 0;
+let positionForMesh2 = 1;
 
 let mesh, geometry;
 let spheres = [];
@@ -28,7 +32,7 @@ let controlPointsTF = [];
 let isFirstLaunch = true;
 
 //let screenSize = {x: 640, y: 480};
-let screenSize = {x: 640, y: 720};
+let screenSize = {x: 800, y: 640};
 let windowHalfX = screenSize.x / 2;
 let windowHalfY = screenSize.y / 2;
 
@@ -96,7 +100,7 @@ function preInit() {
 
   camera = new THREE.PerspectiveCamera( 60, screenSize.x/screenSize.y, 0.1, 100000 );
   camera.position.x = 0;
-  camera.position.y = 1.5;
+  camera.position.y = 3;
   camera.position.z = -0.1;
   camera.lookAt(new THREE.Vector3(0,0,0));
 
@@ -111,13 +115,15 @@ function preInit() {
   renderer.setPixelRatio( window.devicePixelRatio );
   renderer.setSize( screenSize.x, screenSize.y );
   renderer.autoClear = true;
-  renderer.setClearColor("#00FF00");
+  renderer.setClearColor("#000000");
 
   // set up controls
   controls = new THREE.OrbitControls( camera, renderer.domElement );
   controls.enableDamping = true;
   controls.dampingFactor = 0.25;
   controls.enableZoom = true;
+
+  registerSwapEvent();
   renderStage++;
 }
 
@@ -218,9 +224,10 @@ if (renderStage == 1) {
     let boxGeometry = new THREE.BoxGeometry(1.0, 1.0, 1.0);
     boxGeometry.doubleSided = true;
     let meshFirstPass = new THREE.Mesh( boxGeometry, materialFirstPass );
-    let meshSecondPass = new THREE.Mesh( boxGeometry, materialSecondPass );
+    meshSecondPass = new THREE.Mesh( boxGeometry, materialSecondPass );
     sceneFirstPass.add( meshFirstPass );
     sceneSecondPass.add( meshSecondPass );
+    meshSecondPass.position.x = positionForMesh;
 
   } else if (renderStage == 2) {
 
@@ -316,17 +323,39 @@ if (renderStage == 1) {
     let boxGeometry = new THREE.BoxGeometry(1.0, 1.0, 1.0);
     boxGeometry.doubleSided = true;
     let meshFirstPass = new THREE.Mesh( boxGeometry, materialFirstPass2 );
-    let meshSecondPass = new THREE.Mesh( boxGeometry, materialSecondPass2 );
+    meshSecondPass2 = new THREE.Mesh( boxGeometry, materialSecondPass2 );
     sceneFirstPass2.add( meshFirstPass );
-    sceneSecondPass.add( meshSecondPass );
-    meshSecondPass.position.x = 1;
+    sceneSecondPass.add( meshSecondPass2 );
+    meshSecondPass2.position.x = positionForMesh2;
 
     window.addEventListener( 'resize', onWindowResize, false );
 
     animate();
     renderStage = 0;
   }
+}
 
+function registerSwapEvent() {
+  $(document).keypress(function(key) {
+    if (key.which == 97) { // lower case a
+      isSwapped = !isSwapped;
+      if (isSwapped) {
+        meshSecondPass.position.x = positionForMesh2;
+        meshSecondPass2.position.x = positionForMesh;
+      } else {
+        meshSecondPass.position.x = positionForMesh;
+        meshSecondPass2.position.x = positionForMesh2;
+      }
+    } else if (key.which == 115) { // lower case s
+      if (positionForMesh == 0) {
+        positionForMesh = -0.5;
+        positionForMesh2 = 0.5;
+      } else {
+        positionForMesh = 0;
+        positionForMesh2 = 1;
+      }
+    }
+  });
 }
 
 function onWindowResize() {
