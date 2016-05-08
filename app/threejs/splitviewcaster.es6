@@ -25,14 +25,16 @@ let transferTextureIsUpdated = false;
 
 let grd, canvas, ctx;
 let controlPointsTF = [];
+let isFirstLaunch = true;
 
 //let screenSize = {x: 640, y: 480};
 let screenSize = {x: 640, y: 720};
 let windowHalfX = screenSize.x / 2;
 let windowHalfY = screenSize.y / 2;
 
-let renderingTimes = 0;
+let renderStage = 0; // 0: pre-sets, 1: first render, 2: second render
 let props;
+let currentlyLoadedFiles = [];
 
 function loadResource(url, callback) {
   $.ajax({
@@ -72,12 +74,14 @@ function loadShaders(files) {
           }
           fragmentShader2 = data;
 
+          if (isFirstLaunch) {
+            preInit();
+            isFirstLaunch = false;
+          }
+
           for (var i = 0; i < files.length; i++) {
-            if (renderingTimes == 0) {
-              preInit();
-            }
             init(files[i]);
-            renderingTimes++;
+            renderStage++;
           }
         });
       });
@@ -114,13 +118,13 @@ function preInit() {
   controls.enableDamping = true;
   controls.dampingFactor = 0.25;
   controls.enableZoom = true;
+  renderStage++;
 }
 
 
 function init(name) {
   
-if (renderingTimes == 0) {
-  console.log("0: " + name);
+if (renderStage == 1) {
 
   // create Texture
   cubeTexture = props.files[name].tex;
@@ -205,10 +209,8 @@ if (renderingTimes == 0) {
     let meshSecondPass = new THREE.Mesh( boxGeometry, materialSecondPass );
     sceneFirstPass.add( meshFirstPass );
     sceneSecondPass.add( meshSecondPass );
-    meshSecondPass.position.x = 2;
 
-  } else if (renderingTimes == 1) {
-  console.log("1: " + name);
+  } else if (renderStage == 2) {
 
   // create Texture
   cubeTexture2 = props.files[name].tex;
@@ -293,11 +295,12 @@ if (renderingTimes == 0) {
     let meshSecondPass = new THREE.Mesh( boxGeometry, materialSecondPass2 );
     sceneFirstPass2.add( meshFirstPass );
     sceneSecondPass.add( meshSecondPass ); 
+    meshSecondPass.position.x = 1;
 
     window.addEventListener( 'resize', onWindowResize, false );
 
     animate();    
-
+    renderStage = 0;
   }
 
 }

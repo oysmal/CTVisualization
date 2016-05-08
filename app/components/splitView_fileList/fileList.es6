@@ -9,32 +9,44 @@ function setUpEvent() {
   });
 }
 
+function prepareOnCheckEvents() {
+  $(".checkbox").change(function() {
+    let filenames = [];
+
+    $('input:checked').each(function() {
+      filenames.push($(this).val());
+    });
+
+    if (filenames.length == 2) {
+      let elem = $('#file-list');
+      elem.append('<li id="renderButtonHolder" class="file-item row"><button style="margin-top:25px;" id="btn-renderSplit" class="btn btn-primary col-sm-3">Render</button></li>');
+
+      $('#btn-renderSplit').on('click', () => {
+        loadShaders(filenames);
+      });
+
+    } else {
+      $('#renderButtonHolder').remove();
+    }
+  });
+}
+
 function doThings() {
   let props = context();
   let files = props.files;
   let elem = $('#file-list');
   elem.empty();
-  let filenames = [];
-  let items = 0;
 
   for(let filename in files) {
-    filenames.push(filename);
-    items++;
-
-    let file = files[filename];
-    elem.append('<li id="' + filename + '" class="file-item row"><span class="col-sm-9">Data file: ' + filename + ' </span></li>');
+    elem.append('<li id="' + filename + '" class="file-item row"><span class="col-sm-9">Data file: ' + filename + ' </span><input type="checkbox" class="checkbox" value="'+filename+'"/></li>');
   }
 
-  if (filenames.length >= 2) {
-    elem.append('<li><button style="margin-top:25px;" id="btn-renderSplit" class="btn btn-primary col-sm-3">Render</button></li>');
-    $('#btn-renderSplit').on('click', () => {
-        loadShaders(filenames);
-      });
-  }
   if (!hasSetupEvent) {
     setUpEvent();
     hasSetupEvent = true;
   }
+
+  prepareOnCheckEvents();
 }
 
 export default doThings;
