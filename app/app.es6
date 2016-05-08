@@ -44,21 +44,6 @@ function setNavigation() {
     }
   });
 
-
-  // navigate to slides. Replace all html in main_container.
-  // id for slides is 1
-  $('#slices-nav').on('click', () => {
-    if(active != 1) {
-      removeActiveClasses();
-      $('#slices-nav').addClass('active');
-      $('.main_container').empty();
-      $('.main_container').load('components/test.html', () => {
-
-      });
-      active = 1;   // set this as active
-    }
-  });
-
   // navigate to histogram. Replace all html in main_container
   // id for histogram is 2
   $('#histogram-nav').on('click', () => {
@@ -105,7 +90,6 @@ function setNavigation() {
 
 function removeActiveClasses() {
   $('#home-nav').removeClass('active');
-  $('#slices-nav').removeClass('active');
   $('#histogram-nav').removeClass('active');
   $('#coverflow-nav').removeClass('active');
   $('#splitView-nav').removeClass('active');
