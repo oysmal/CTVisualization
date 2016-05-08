@@ -7,25 +7,25 @@ export default function() {
 				let props = context();
 				let fileNames = getFiles();
 				//console.log(fileNames);
-				//var fileNames=["one","hand","three"]; // change me
+				//let fileNames=["one","hand","three"]; // change me
 				fileNames.forEach(function(entry){
 					$('#namesXray').append('<option value="'+entry+'">'+entry+'</option>');
 				});
 
 				$( "#namesXray" ).click(function() {
 						$('.coverflow').empty();
-						var counter = 0;
-						var name=$( "#namesXray option:selected" ).text();
+						let counter = 0;
+						let name=$( "#namesXray option:selected" ).text();
 						console.log(name);
-  						var xrays = props.image_arrays[name];
+  						let xrays = props.image_arrays[name];
 						xrays.forEach(function(entry){
-						var img = "img"+counter;
+						let img = "img"+counter;
 							$('.coverflow').append('<img class="reflected" id="'+img+'" src=""/>');
 							document.getElementById(img).setAttribute( 'src', entry.src);
 							counter++;
 
 						});
-					var mid = Math.round(counter/2);
+					let mid = Math.round(counter/2);
 
 
 
@@ -65,8 +65,8 @@ export default function() {
 					easing:			'easeOutElastic',
 					duration:		'slow',
 					index:			3,
-					width:			320,
-					height:			240,
+					width:			500,
+					height:			500,
 					visible:		'density',
 					selectedCss:	{	opacity: 1	},
 					outerCss:		{	opacity: .1	},
@@ -76,7 +76,7 @@ export default function() {
 					},
 
 					change:			function(event, cover) {
-						var img = $(cover).children().andSelf().filter('img').last();
+						let img = $(cover).children().andSelf().filter('img').last();
 						$('#photos-name').text(img.data('name') || 'unknown');
 					}
 
@@ -84,7 +84,7 @@ export default function() {
 
 				$('#leakdetect').click(function() {
 					$('#leakbucket').empty();
-					for (var i = 0; i < 100; ++i) {
+					for (let i = 0; i < 100; ++i) {
 						$('<div><div>test</div></div>').appendTo('#leakbucket').coverflow();
 					}
 				});

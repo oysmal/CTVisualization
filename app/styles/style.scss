@@ -27,6 +27,10 @@ p {
 	min-width: 2em;
 }
 
+body {
+  height: 100%;
+}
+
 .align-right {
   text-align: right;
 }
@@ -189,3 +193,28 @@ body, p {
 
 }
 // end bootstrap override
+
+.box-padding {
+    padding: 0.2em;
+    border: 0.1em solid $darkest;
+    background-color: $dark;
+    color: $dark_green;
+    height: 95vh;
+}
+
+.cut-box {
+  padding: 0.2em;
+  border: 0.1em solid $darkest;
+  background-color: $dark;
+  color: $dark_green;
+}
+
+.padding {
+  padding: 0.2em;
+  background-color: $dark;
+  height: 25vh;
+}
+
+#appCanvas {
+  border: 1px solid $darkest;
+}

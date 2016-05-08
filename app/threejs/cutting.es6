@@ -10,22 +10,22 @@ function init(init_scene) {
   tex = new THREE.TextureLoader().load('assets/images/cutting.png');
   cutting_x = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), new THREE.MeshBasicMaterial({map: tex, color: 0xFF0000, opacity: 0.4, side: THREE.DoubleSide, transparent:true}));
   cutting_x.name = "cutting_x";
-  cut_dir_x = 1.0;
+  cut_dir_x = -1.0;
 
   cutting_y = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), new THREE.MeshBasicMaterial({map: tex, color: 0x00FF00, opacity: 0.4, side: THREE.DoubleSide, transparent:true}));
   cutting_y.name = "cutting_y";
-  cut_dir_y = 1.0;
+  cut_dir_y = -1.0;
 
   cutting_z = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), new THREE.MeshBasicMaterial({map: tex, color: 0x0000FF, opacity: 0.4, side: THREE.DoubleSide, transparent:true}));
   cutting_z.name = "cutting_z";
-  cut_dir_z = 1.0;
+  cut_dir_z = -1.0;
 
   cutting_x.position.set(0.5,0,0);
   cutting_x.rotation.y = Math.PI/2;
   cutting_x.material.side = THREE.DoubleSide;
   scene.add(cutting_x);
 
-  cutting_y.position.set(0,0.5,0);
+  cutting_y.position.set(0,-0.5,0);
   cutting_y.rotation.x = -Math.PI/2;
   cutting_y.material.side = THREE.DoubleSide;
   scene.add(cutting_y);
@@ -59,7 +59,7 @@ function getCuttingPosY() {
   if(scene.getObjectByName(cutting_y.name)) {
     return cutting_y.position.y;
   } else {
-    return 10.0;
+    return -10.0;
   }
 }
 
@@ -125,7 +125,7 @@ function setUpListeners() {
   });
 
   $(document).on('move_yplane', (e, param) => {
-    cutting_y.position.y = 0.5-(0.001*param.value);
+    cutting_y.position.y = -0.5+(0.001*param.value);
   });
 
   $(document).on('move_zplane', (e, param) => {
@@ -161,17 +161,14 @@ function setUpListeners() {
 
   $(document).on('toggleCutDirX', (e, obj) => {
     toggleCutDirX(obj.val);
-    console.log("dir x: " + cut_dir_x);
   });
 
   $(document).on('toggleCutDirY', (e, obj) => {
     toggleCutDirY(obj.val);
-    console.log("dir y: " + cut_dir_y);
   });
 
   $(document).on('toggleCutDirZ', (e, obj) => {
     toggleCutDirZ(obj.val);
-    console.log("dir z: " + cut_dir_z);
   });
 
 }

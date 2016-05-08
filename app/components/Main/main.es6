@@ -2,7 +2,7 @@
 import loadFile from '../LoadFile/loadFile.es6';
 import fileList from '../FileList/fileList.es6';
 
-var main = () => {
+let main = () => {
 
   $('#file-container').load('components/LoadFile/loadfile.html', () => {
     loadFile();

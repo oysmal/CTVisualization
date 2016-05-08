@@ -6,7 +6,7 @@ function setUpEvent() {
     doThings();
   });
 }
-  var names = [];
+  let names = [];
   // let props = context();
   // let files = props.files;
 function doThings() {
@@ -20,7 +20,7 @@ function doThings() {
       names.push(filename);
     }
     let file = files[filename];
-    elem.append('<li id="' + filename + '" class="file-item row"><span class="col-sm-9">Data file: ' + filename + ' </span><button id="btn-'+filename+'" class="btn btn-primary col-sm-3">Render</button></li>');
+    elem.append('<li id="' + filename + '" class="file-item row"><span class="col-sm-9">Data file: ' + filename + ' </span><button id="btn-'+filename+'" class="btn btn-default col-sm-3">Render</button></li>');
 
     $('#btn-'+filename).on('click', () => {
       loadShaders(filename);

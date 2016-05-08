@@ -82,8 +82,8 @@ function init(name) {
 
   camera = new THREE.PerspectiveCamera( 60, screenSize.x/screenSize.y, 0.1, 100000 );
   camera.position.x = 0;
-  camera.position.y = 1.5;
-  camera.position.z = -0.1;
+  camera.position.y = 0;
+  camera.position.z = -2;
   camera.lookAt(new THREE.Vector3(0,0,0));
 
   sceneFirstPass = new THREE.Scene();

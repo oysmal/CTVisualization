@@ -11,10 +11,10 @@ export default function(){
   });
   $( "#namesHist" ).click(function() { //when one is clickedon
     $(".histogram_container").empty();
-    var name=$( "#namesHist option:selected" ).text();
-    var fileData = props.files[name].data;
-    var values=[];
-    var count =0;
+    let name=$( "#namesHist option:selected" ).text();
+    let fileData = props.files[name].data;
+    let values=[];
+    let count =0;
     fileData.forEach(function(entry) {
     if (count == 0||count ==1||count ==2 ){
       } // the first three values aren't data values
@@ -24,13 +24,13 @@ export default function(){
     count = count +1;
     });
     values=values.sort(function(a, b){return a-b});
-    var max= values[count-4];
-    var numberOfBars = 15; //this is artbitrarly chosen
-    var range = max/numberOfBars;
-    var data=[];
-    var i, index1,index2,frequency;
-    var localMax=max/numberOfBars;
-    var zeroFreq=0;
+    let max= values[count-4];
+    let numberOfBars = 15; //this is artbitrarly chosen
+    let range = max/numberOfBars;
+    let data=[];
+    let i, index1,index2,frequency;
+    let localMax=max/numberOfBars;
+    let zeroFreq=0;
     for(i=0;i<numberOfBars;i++){ //organize into ranges
       frequency = 0;
       index2= 0;
@@ -40,41 +40,41 @@ export default function(){
         index2++;
       }
       values=values.splice(frequency,values.length-1);
-      var valueRange= Math.round(range)*i + " - "+ localMax;
+      let valueRange= Math.round(range)*i + " - "+ localMax;
       localMax=range*(i+2);
       data.push({Range: valueRange, frequency: frequency},);
     }
 
 //D3 BOOTSTRAP BEGINS HERE
-var margin = {top: 40, right: 20, bottom: 30, left: 80},
+let margin = {top: 40, right: 20, bottom: 30, left: 80},
     width = 1200 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 
-var formatPercent = d3.format(".0%");
+let formatPercent = d3.format(".0%");
 
-var x = d3.scale.ordinal()
+let x = d3.scale.ordinal()
     .rangeRoundBands([0, width], .1);
 
-var y = d3.scale.linear()
+let y = d3.scale.linear()
     .range([height, 0]);
 
-var xAxis = d3.svg.axis()
+let xAxis = d3.svg.axis()
     .scale(x)
     .orient("bottom");
 
-var yAxis = d3.svg.axis()
+let yAxis = d3.svg.axis()
     .scale(y)
     .orient("left");
     //.tickFormat(formatPercent);
 
-var tip = d3.tip()
+let tip = d3.tip()
   .attr('class', 'd3-tip')
   .offset([-10, 0])
   .html(function(d) {
     return "<strong>Frequency:</strong> <span style='color:red'>" + d.frequency + "</span>";
   })
 
-var svg = d3.select(".histogram_container").append("svg")
+let svg = d3.select(".histogram_container").append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
   .append("g")

@@ -4,42 +4,40 @@
 
     <div class="row">
       <div class="col-sm-12">
-        <canvas id="appCanvas"></canvas>
+        <canvas id="appCanvas" width="800px" height="640px"></canvas>
       </div>
     </div>
 
-    <div class="row panel panel-default">
+    <div class="row padding">
 
-      <div class="col-sm-2">
-        <label for="move-xplane">Cut along x-axis:</label>
-        <input id="move-xplane" type="range" min="0" max="1000" value="0" step="1">
-        <button id="toggle-xplane" class="btn btn-default">Toggle</button>
-
+      <div class="col-sm-4 cut-box">
+        <label class="cut-label" for="move-xplane">Cut along x:</label>
+        <input class="range-slider" id="move-xplane" type="range" min="0" max="1000" value="0" step="1">
         <div class="btn-group" role="group" aria-label="...">
+          <button  id="toggle-xplane" class="btn btn-default">Toggle</button>
           <button type="button" class="btn btn-default" id="xplane-dir-neg">Cut left</button>
           <button type="button" class="btn btn-default" id="xplane-dir-pos">Cut right</button>
         </div>
       </div>
 
-      <div class="col-sm-2">
-        <label for="move-yplane">Cut along y-axis:</label>
-        <input id="move-yplane" type="range" min="0" max="1000" value="0"  step="1">
-        <button id="toggle-yplane" class="btn btn-default">Toggle</button>
-
+      <div class="col-sm-4 cut-box">
+        <label class="cut-label" for="move-yplane">Cut along y:</label>
+        <input class="range-slider" id="move-yplane" type="range" min="0" max="1000" value="0"  step="1">
         <div class="btn-group" role="group" aria-label="...">
-          <button type="button" class="btn btn-default" id="yplane-dir-neg">Cut left</button>
-          <button type="button" class="btn btn-default" id="yplane-dir-pos">Cut right</button>
+          <button id="toggle-yplane" class="btn btn-default">Toggle</button>
+          <button type="button" class="btn btn-default" id="yplane-dir-neg">Cut below</button>
+          <button type="button" class="btn btn-default" id="yplane-dir-pos">Cut above</button>
         </div>
       </div>
 
-      <div class="col-sm-2">
-        <label for="move-zplane">Cut along z-axis:</label>
-        <input id="move-zplane" type="range" min="0" max="1000" value="0"  step="1">
-        <button id="toggle-zplane" class="btn btn-default">Toggle</button>
+      <div class="col-sm-4 cut-box">
+        <label class="cut-label" for="move-zplane">Cut along z:</label>
+        <input class="range-slider" id="move-zplane" type="range" min="0" max="1000" value="0"  step="1">
 
         <div class="btn-group" role="group" aria-label="...">
-          <button type="button" class="btn btn-default" id="zplane-dir-neg">Cut left</button>
-          <button type="button" class="btn btn-default" id="zplane-dir-pos">Cut right</button>
+          <button id="toggle-zplane" class="btn btn-default">Toggle</button>
+          <button type="button" class="btn btn-default" id="zplane-dir-neg">Cut front</button>
+          <button type="button" class="btn btn-default" id="zplane-dir-pos">Cut back</button>
         </div>
       </div>
 
@@ -47,7 +45,7 @@
 
   </div>
 
-  <div class="col-sm-4 main-right-menus panel panel-default">
+  <div class="col-sm-4 main-right-menus box-padding">
     <div class="row"><div id="tf-holder"  class="col-sm-12" ></div></div>
     <div class="row"><div id="file-container"  class="col-sm-12" ></div></div>
     <div class="row"><div id="file-list-container"  class="col-sm-12" ></div></div>

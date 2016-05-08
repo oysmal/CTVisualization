@@ -24,7 +24,7 @@ const int MAX_STEPS_RAYCASTER = 1774;
 vec4 sampleAs3DTexture( vec3 texCoord ) {
 
   // cutting logic
-  if(x_plane_cut_dir > 0.0) {
+  if(x_plane_cut_dir < 0.0) {
     if(texCoord.x > (x_plane_pos+0.5)) {
       return vec4(0.0, 0.0, 0.0, 0.0);
     }
@@ -43,7 +43,8 @@ vec4 sampleAs3DTexture( vec3 texCoord ) {
       return vec4(0.0, 0.0, 0.0, 0.0);
     }
   }
-  if(z_plane_cut_dir > 0.0) {
+
+  if(z_plane_cut_dir < 0.0) {
     if(texCoord.z < (z_plane_pos+0.5))  {
       return vec4(0.0, 0.0, 0.0, 0.0);
     }

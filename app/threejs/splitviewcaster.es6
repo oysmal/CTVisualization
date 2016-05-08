@@ -123,7 +123,7 @@ function preInit() {
 
 
 function init(name) {
-  
+
 if (renderStage == 1) {
 
   // create Texture
@@ -318,12 +318,12 @@ if (renderStage == 1) {
     let meshFirstPass = new THREE.Mesh( boxGeometry, materialFirstPass2 );
     let meshSecondPass = new THREE.Mesh( boxGeometry, materialSecondPass2 );
     sceneFirstPass2.add( meshFirstPass );
-    sceneSecondPass.add( meshSecondPass ); 
+    sceneSecondPass.add( meshSecondPass );
     meshSecondPass.position.x = 1;
 
     window.addEventListener( 'resize', onWindowResize, false );
 
-    animate();    
+    animate();
     renderStage = 0;
   }
 
@@ -364,7 +364,7 @@ function render() {
   renderer.render( sceneFirstPass2, camera, rtTexture2, true );
 
   renderer.render( sceneSecondPass, camera );
-  
+
   materialSecondPass.uniforms.steps.value = sizez;
   materialSecondPass.uniforms.alphaCorrection.value = 1.0;
 

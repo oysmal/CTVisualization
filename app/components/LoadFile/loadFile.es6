@@ -5,15 +5,15 @@ let data = null;
 
 export default function() {
   document.getElementById('file-input').addEventListener('change', e => {
-    var files = e.target.files;
+    let files = e.target.files;
 
     if (!files.length) {
       alert('Please select a file!');
       return;
     }
 
-    var file = files[0];
-    var reader = new FileReader();
+    let file = files[0];
+    let reader = new FileReader();
 
     reader.onloadend = (evt) => {
       if (evt.target.readyState == FileReader.DONE) { // DONE == 2

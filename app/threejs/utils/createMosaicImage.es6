@@ -14,10 +14,11 @@ class Mosaic {
 
 	  let grd = ctx.createLinearGradient(0, 0, this.xray_colors.width -1 , this.xray_colors.height - 1);
 	  grd.addColorStop(0.0, 'rgba(0, 0, 0, 0)');
-		grd.addColorStop(1/255*13, 'rgba(255, 112, 126, 1.0)');
+		grd.addColorStop(1/255*13, 'rgba(255, 150, 150, 1.0)');
 		grd.addColorStop(1/255*25, 'rgba(100, 0, 242, 1.0)');
 	  grd.addColorStop(1/255*50, 'rgba(255, 0, 0, 1.0)');
-	  grd.addColorStop(1/255*100, 'rgba(211, 209, 209, 1.0)');
+	  grd.addColorStop(1/255*75, 'rgba(211, 209, 209, 1.0)');
+	  grd.addColorStop(1/255*125, 'rgba(255, 255, 255, 1.0)');
 	  grd.addColorStop(1.0, 'rgba(255, 255, 255, 1.0)');
 
 	  ctx.fillStyle = grd;
@@ -44,11 +45,11 @@ class Mosaic {
 
 		for(let i = 0; i < sizey; i++) {
 			for(let j = 0; j < sizex; j++) {
-				var id = ctx.createImageData(1,1);
-				var id2 = ctx2.createImageData(1,1);
-				// var msb = data[i*sizex+j] & 0xFF00;
+				let id = ctx.createImageData(1,1);
+				let id2 = ctx2.createImageData(1,1);
+				// let msb = data[i*sizex+j] & 0xFF00;
 				// msb = msb >> 8;
-				// var lsb = data[i*sizex+j] & 0x00FF;
+				// let lsb = data[i*sizex+j] & 0x00FF;
 				// Use bitmask for spliting the uint16 value into two uint8 to fit into img
 				id.data[0] = 0;//msb;	// r
 				id.data[1] = 0;//lsb;	// g
@@ -70,6 +71,18 @@ class Mosaic {
 		image.src = canvas.toDataURL("/image/png");
 		let image2 = new Image();
 		image2.src = canvas2.toDataURL("/image/png");
+
+
+		let canvas3 = document.createElement("canvas");
+		canvas3.setAttribute("width", sizex*2.0);
+		canvas3.setAttribute("height", sizey*2.0);
+		let ctx3 = canvas3.getContext('2d');
+		let image3 = new Image();
+		ctx3.drawImage(image2, 0, 0);
+		ctx3.scale(2.0,2.0);
+		ctx3.clearRect(0, 0, canvas3.width, canvas3.height);
+		ctx3.drawImage(image2, 0, 0);
+		image3.src = canvas3.toDataURL("image/png");
 		callback(image, image2);
 	}
 
@@ -85,7 +98,7 @@ class Mosaic {
 		data = data.slice(2);
 		this.sizez = sizez;
 
-		var canvas = document.createElement("canvas");
+		let canvas = document.createElement("canvas");
 		this.scaleFactor = 1.0;
 		if (sizex*sizez > 16384.0) {
 			this.scaleFactor = sizex*sizez/16384.0;
@@ -93,10 +106,10 @@ class Mosaic {
 
 		canvas.setAttribute("width", sizex*sizez/this.scaleFactor);
 		canvas.setAttribute("height", sizey/this.scaleFactor);
-		var ctx = canvas.getContext('2d');
+		let ctx = canvas.getContext('2d');
 
 		let i = 0;
-		var that = this;
+		let that = this;
 
 		(function createImages() {
 			that.updateAndPostProgress(i, false);
