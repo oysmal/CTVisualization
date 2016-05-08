@@ -3,6 +3,7 @@ import main from './components/Main/main.es6';
 import menu from './components/Menu/menu.es6';
 import histogram from './components/histogram/histogram.es6';
 import coverflow from './components/coverflow/coverflow.es6';
+import splitView from './components/splitView/splitView.es6';
 
 let active = 0;
 
@@ -85,6 +86,20 @@ function setNavigation() {
       active = 3;
     }
   });
+
+  // navigate to splitView rendering. Replace all html in main_container
+  // id for splitView is 4
+  $('#splitView-nav').on('click', () => {
+    if(active != 4) {
+      removeActiveClasses();
+      $('#splitView-nav').addClass('active');
+      $('.main_container').empty();
+      $('.main_container').load('components/splitView/splitView.html', () => {
+        splitView();
+      });
+      active = 4;
+    }
+  });
 }
 
 
@@ -93,4 +108,5 @@ function removeActiveClasses() {
   $('#slices-nav').removeClass('active');
   $('#histogram-nav').removeClass('active');
   $('#coverflow-nav').removeClass('active');
+  $('#splitView-nav').removeClass('active');
 }
