@@ -1,8 +1,34 @@
+import context from '../Context/context.es6';
+import {getFiles} from '../FileList/fileList.es6';
 
 export default function() {
 
-				// Alphabet
-				console.log($);
+				
+				let props = context();
+				let fileNames = getFiles();
+				//console.log(fileNames);
+				//var fileNames=["one","hand","three"]; // change me
+				fileNames.forEach(function(entry){
+					$('#namesXray').append('<option value="'+entry+'">'+entry+'</option>');
+				});
+				
+				$( "#namesXray" ).click(function() {
+						$('.coverflow').empty();
+						var counter = 0;
+						var name=$( "#namesXray option:selected" ).text();
+						console.log(name);
+  						var xrays = props.image_arrays[name];
+						xrays.forEach(function(entry){
+						var img = "img"+counter;
+							$('.coverflow').append('<img class="reflected" id="'+img+'" src=""/>');
+							document.getElementById(img).setAttribute( 'src', entry.src);
+							counter++;
+
+						});
+					var mid = Math.round(counter/2);
+				
+
+
 				$('.coverflow').coverflow();
 
 				$('#first').click(function() {
@@ -14,7 +40,7 @@ export default function() {
 				});
 
 				$('#goto6').click(function() {
-					$('.coverflow').coverflow('index', 6-1);	// zero-based index!
+					$('.coverflow').coverflow('index', mid-1);	// zero-based index!
 				});
 				
 				$('#keyboard').click(function() {
@@ -61,6 +87,7 @@ export default function() {
 					for (var i = 0; i < 100; ++i) {
 						$('<div><div>test</div></div>').appendTo('#leakbucket').coverflow();
 					}
+				});
 				});
 			
 }
