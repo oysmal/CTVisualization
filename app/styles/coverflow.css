@@ -3,6 +3,7 @@
 			.coverflow {
 				height: 400px;
 				border-bottom: solid 2px black;
+				background-color: black;
 			}
 
 			.coverflow .cover {

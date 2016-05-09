@@ -18,13 +18,9 @@ class Mosaic {
 
 	createOneImage(sizex, sizey, data, callback) {
 		let canvas = document.createElement("canvas");
-		let canvas2 = document.createElement("canvas");
 		canvas.setAttribute("width", sizex);
 		canvas.setAttribute("height", sizey);
-		canvas2.setAttribute("width", sizex);
-		canvas2.setAttribute("height", sizey);
 		let ctx = canvas.getContext('2d');
-		let ctx2 = canvas2.getContext('2d');
 
 		for(let i = 0; i < sizey; i++) {
 			for(let j = 0; j < sizex; j++) {
@@ -33,9 +29,9 @@ class Mosaic {
 				// msb = msb >> 8;
 				// let lsb = data[i*sizex+j] & 0x00FF;
 				// Use bitmask for spliting the uint16 value into two uint8 to fit into img
-				id.data[0] = 0;//msb;	// r
-				id.data[1] = 0;//lsb;	// g
-				id.data[2] = 0;	// b
+				id.data[0] = 255;//msb;	// r
+				id.data[1] = 255;//lsb;	// g
+				id.data[2] = 255;	// b
 				id.data[3] = Math.floor(data[i*sizex+j]/4095*255);	// a
 
 				ctx.putImageData(id, j, i); // row based, so add to x=j, y=i
@@ -44,21 +40,19 @@ class Mosaic {
 
 		let image = new Image();
 		image.src = canvas.toDataURL("/image/png");
-		let image2 = new Image();
-		image2.src = canvas2.toDataURL("/image/png");
 
 
 		let canvas3 = document.createElement("canvas");
-		canvas3.setAttribute("width", sizex*4.0);
-		canvas3.setAttribute("height", sizey*4.0);
+		canvas3.setAttribute("width", sizex*2.5);
+		canvas3.setAttribute("height", sizey*2.5);
 		let ctx3 = canvas3.getContext('2d');
-		let image3 = new Image();
-		ctx3.drawImage(image2, 0, 0);
-		ctx3.scale(4.0,4.0);
-		ctx3.clearRect(0,0,sizex*4, sizey*4);
-		ctx3.drawImage(image2, 0, 0);
-		image3.src = canvas3.toDataURL("image/png");
-		callback(image, image3);
+		let image2 = new Image();
+		ctx3.drawImage(image, 0, 0);
+		ctx3.scale(2.5, 2.5);
+		ctx3.clearRect(0,0,sizex*2.5, sizey*2.5);
+		ctx3.drawImage(image, 0, 0);
+		image2.src = canvas3.toDataURL("image/png");
+		callback(image, image2);
 	}
 
 	createMosaicImage(name, data, callback) {
